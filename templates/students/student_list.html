@@ -1,0 +1,46 @@
+{% extends 'Links.html' %}
+<h1>Student list</h1>
+
+
+{% block content %}
+
+<div class="container ">
+
+    <br><br>
+<div class="row">
+    <div class="col-md-9">
+        <h5>Students:</h5>
+
+        <div class="card card-body">
+            <table class="table table-sm">
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Surname</th>
+                    <th>Class</th>
+                    <th>Action</th>
+                </tr>
+                {% for s in students %}
+                <tr>
+                    <td>{{s.id_number}} </td>
+                    <td>{{s.user.first_name}} </td>
+                    <td>{{s.user.last_name}} </td>
+                    <td>{{s.year}}{{s.students_class}} </td>
+                    <td>
+
+                        <a data-toggle="tooltip" title="Edit" href="{% url 'edit_student' pk=s.pk %}" class="blue-text"><i class="fa fa-pencil"></i></a>
+                        <a data-toggle="tooltip" title="Delete" href="{% url 'delete_student' pk=s.pk %}" class="red-text"><i class="fa fa-times"></i></a>
+
+                    </td>
+                </tr>
+                {% endfor %}
+            </table>
+
+        </div>
+    <a class="btn btn-primary" href="{% url 'student_add' %}" role="button">Add Student</a>
+    </div>
+</div>
+
+<br><br>
+</div>
+{% endblock %}
