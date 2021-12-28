@@ -1,0 +1,173 @@
+{% extends 'Links.html' %}
+
+
+{% block title %} {{ user.first_name|capfirst }}'s Profile | ARMS {% endblock title %}
+
+
+{% block content %}
+<style type="text/css">
+  .table-wrapper-scroll-y {
+display: block;
+max-height: 350px;
+overflow-y: auto;
+-ms-overflow-style: -ms-autohiding-scrollbar;
+}
+</style>
+ <div class="container-fluid mt-5">
+<!-- Heading -->
+<div class="card mb-4 wow fadeIn">
+	<!--Card content-->
+    <div class="card-body d-sm-flex justify-content-between">
+	    <h6 class="mb-2 mb-sm-0 pt-1">
+    	<a href="/">Home Page</a>
+        	<span>/</span>
+            	<span>Profile</span>
+        </h6>
+    </div>
+</div>
+            <!-- Heading -->
+
+  <div class="row">
+    <div class="col-md-3">
+
+    	<!-- Card -->
+<div class="card">
+
+  <!-- Card image -->
+
+{% if user.is_teacher %}
+    <!-- Card content -->
+  <div class="card-body card-body-cascade text-center">
+
+    <small class="card-title"><b>Name: </b>{{ user.get_full_name }}</small><br>
+    <small class="card-title">Role: Teacher </small><br>
+    <a href="#" class="btn btn-primary">Send Message</a>
+  </div>
+{% endif %}
+
+{% if user.is_student %}
+    <!-- Card content -->
+  <div class="card-body card-body-cascade text-center">
+
+    <small class="card-title">Name: {{ user.first_name }}</small><br>
+    <small class="card-title">Role: Student</small><br>
+    <small class="card-title">Level: {{ level.level }}</small>
+    <a href="#" class="btn btn-primary">Send Message</a>
+  </div>
+{% endif %}
+
+
+{% if user.is_superuser %}
+    <!-- Card content -->
+  <div class="card-body card-body-cascade text-center">
+
+    <small>Name: {{ user.get_full_name }}</small><br>
+    <small>Role: Superuser</small>
+
+  </div>
+{% endif %}
+
+
+</div>
+<!-- Card -->
+    </div>
+    {% if user.is_teacher %}
+    </div>
+  </div>
+  {% endif %}
+{% if user.is_student %}
+    <div class="col-md-7 text-center">
+      <p>Registered Courses</p>
+  <div class="table-wrapper-scroll-y">
+
+  <table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Course Code</th>
+      <th scope="col">Course Title</th>
+      <th scope="col">Course Unit</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for course in courses %}
+    <tr>
+      <th scope="row">{{ forloop.counter }}</th>
+      <td>{{ course.course.courseCode }}</td>
+      <td>{{ course.course.courseTitle }}</td>
+      <td>{{ course.course.courseUnit }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+    <td>{{ course.courseCode }}</td>
+      <td></td>
+      <td>No course is registered this session !</td>
+      <td></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+    </div>
+  </div>
+  {% endif %}
+  {% if user.is_superuser %}
+    <div class="col-md-7 text-center">
+      <p>All staff list</p>
+  <div class="table-wrapper-scroll-y">
+
+  <table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Firstname</th>
+      <th scope="col">Lastname</th>
+      <th scope="col">Address</th>
+      <th scope="col">Picture</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for staff in staff %}
+    <tr>
+      <th scope="row">{{ forloop.counter }}</th>
+      <td>{{ staff.first_name }}</td>
+      <td>{{ staff.last_name }}</td>
+      <td>{{ staff.address }}</td>
+      <td>{{ staff.get_picture.url }}</td>
+      <td>
+        <span class="table-remove">
+          <a href="" class="btn btn-info btn-rounded btn-sm my-0">View</a>
+        </span>
+
+        <span class="table-remove">
+          <a href="" class="btn btn-info btn-rounded btn-sm my-0">Delete</a>
+        </span>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+    <td></td>
+      <td></td>
+      <td>No Staff to show !</td>
+      <td></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+    </div>
+  </div>
+  {% endif %}
+  <div class="col-md-2 text-center">
+    <small> Registered:<br><date>{{ user.date_joined|naturaltime }}</date></small><hr />
+    <small> Last Login:<br><date>
+    {% if user.last_login == None %} 
+          Never 
+    {% else %}
+      {{ user.last_login|naturaltime }}
+    {% endif %}</date></small><hr />
+    <small> Phone:<br><date>{% if user.phone %}{{ user.phone }}{% endif %}</date></small><hr />
+    <small> Email:<br><date>{{ user.email }}</date></small><hr />
+    <small> Address:<br><date>{{ user.address }}</date></small>
+  </div>
+</div>
+{% endblock %}

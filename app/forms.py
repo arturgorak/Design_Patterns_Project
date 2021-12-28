@@ -2,7 +2,10 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
 from .models import *
+from django import forms
+from django.core.exceptions import ValidationError
 from django.forms import BaseModelFormSet
+from django.forms import modelformset_factory
 
 
 class TeacherAddForm(UserCreationForm):
@@ -61,16 +64,6 @@ class TeacherAddForm(UserCreationForm):
         label="Email",
     )
 
-    subject = forms.CharField(
-        widget=forms.Select(
-            choices=SUBJECTS,
-            attrs={
-                'class': 'browser-default custom-select',
-            }
-        ),
-        label="Subject",
-    )
-
     class Meta(UserCreationForm.Meta):
         model = User
 
@@ -85,7 +78,7 @@ class TeacherAddForm(UserCreationForm):
         user.email = self.cleaned_data.get('email')
         user.save()
 
-        teacher = Teacher.objects.create(user=user, subject=self.cleaned_data.get('subject'))
+        teacher = Teacher.objects.create(user=user)
         teacher.save()
 
         return user
@@ -178,6 +171,7 @@ class StudentAddForm(UserCreationForm):
 
     class Meta(UserCreationForm.Meta):
         model = User
+        fields = ['username', 'address', 'phone', 'firstname', 'lastname', 'email', 'year', 'branch']
 
     @transaction.atomic()
     def save(self):
@@ -310,3 +304,76 @@ class SemesterForm(forms.ModelForm):
     class Meta:
         model = Semester
         fields = ['semester', 'is_current_semester', 'session', 'next_semester_begins']
+
+
+# class GradeAddForm(forms.ModelForm):
+#     student = forms.ModelMultipleChoiceField(
+#         queryset=Student.objects.all().order_by('students_class'),
+#         widget=forms.CheckboxSelectMultiple,
+#         required=True
+#     )
+#
+#     teacher = forms.ModelMultipleChoiceField(
+#         queryset=Teacher.objects.all().order_by('user__last_name'),
+#         widget=forms.CheckboxSelectMultiple,
+#         required=True
+#     )
+#
+#     subject = forms.ModelMultipleChoiceField(
+#         queryset=Subject.objects.all().order_by('subjectName'),
+#         widget=forms.CheckboxSelectMultiple,
+#         required=True
+#     )
+#
+#     date = forms.DateTimeField(
+#         widget=forms.TextInput(
+#             attrs={
+#                 'type': 'date',
+#             }
+#         ),
+#         required=True)
+#
+#     grade = forms.CharField(
+#         widget=forms.Select(
+#             choices=GRADE,
+#             attrs={
+#                 'class': 'browser-default custom-select',
+#             }
+#         ),
+#         label="Grade",
+#     )
+#
+#     weight = forms.CharField(
+#         widget=forms.Select(
+#             choices=WEIGHT,
+#             attrs={
+#                 'class': 'browser-default custom-select',
+#             }
+#         ),
+#         label="Weight",
+#     )
+#
+#     comment = forms.CharField(
+#         max_length=30,
+#         widget=forms.TextInput(
+#             attrs={
+#                 'class': 'form-control',
+#             }
+#         ),
+#         label="Add a little comment",
+#         required=False,
+#     )
+#
+#     class Meta:
+#         model = Subject
+#         fields = ['student', 'teacher', 'subject', 'date', 'grade', 'weight', 'comment']
+
+class GradeAddForm(forms.Form):
+    subject = forms.ModelMultipleChoiceField(
+        queryset=Subject.objects.all(), widget=forms.CheckboxSelectMultiple
+    )
+
+
+EditGrades = modelformset_factory(
+    Grade, fields=("grade", "weight", "date", "comment"), extra=0, can_delete=True
+)

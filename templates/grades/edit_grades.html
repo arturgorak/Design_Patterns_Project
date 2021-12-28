@@ -1,0 +1,48 @@
+{% extends 'Links.html' %}
+{% load widget_tweaks %}
+
+{% block title %}
+Update Results
+{% endblock title %}
+
+
+{% block content %}
+<form method="POST">
+  {% csrf_token %}
+  {{ formset.management_form}}
+
+  <table id="studenttable" class="table table-sm">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Surname</th>
+        <th>Name</th>
+        <th>Class</th>
+        <th>Subject</th>
+        <th>Grade</th>
+        <th>Weight</th>
+        <th>Delete</th>
+
+      </tr>
+    </thead>
+    <tbody>
+      {% for form in formset %}
+      {{ form.id}}
+        <tr>
+          <td>{{forloop.counter }}</td>
+          <td>{{form.instance.student.user.last_name}}</td>
+          <td>{{form.instance.student.user.first_name}}</td>
+          <td>{{form.instance.student.year}}{{form.instance.student.students_class}}</td>
+          <td>{{form.instance.subject.subjectName}}</td>
+          <td style="width: 10%;">{{form.grade| add_class:"form-control form-control-sm"}}</td>
+          <td style="width: 10%;">{{form.weight | add_class:"form-control form-control-sm"}}</td>
+          <td>{{form.DELETE}}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <input type="submit" class="btn btn-success" value="Save">
+  </form>
+
+{% endblock content %}

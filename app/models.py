@@ -83,7 +83,6 @@ SUBJECTS = (
 
 class Teacher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    subject = models.CharField(choices=SUBJECTS, max_length=30, blank=True)
 
 
 class Class(models.Model):
@@ -105,30 +104,21 @@ class Class(models.Model):
 #     return i
 
 
+class Subject(models.Model):
+    subjectName = models.CharField(choices=SUBJECTS, max_length=200)
+    subjectCode = models.CharField(max_length=200, unique=True)
+    teacher = models.ForeignKey(Teacher, on_delete=models.SET_NULL, null=True)
+    description = models.TextField(max_length=200, blank=True)
+    semester = models.CharField(choices=SEMESTER, max_length=200)
+    branch = models.CharField(choices=BRANCH, max_length=1, blank=True, null=True)
+    year = models.CharField(choices=YEAR, max_length=1, blank=True, null=True)
 
-# a = "a"
-# b = "b"
-# c = "c"
-# d = "d"
-#
-# BRANCH = (
-#     (a, "a"),
-#     (b, "b"),
-#     (c, "c"),
-#     (d, "d"),
-# )
-# class Subject(models.Model):
-#     subjectTitle = models.CharField(max_length=200)
-#     subjectCode = models.CharField(max_length=200, unique=True)
-#     teacher = models.ForeignKey(Teacher, on_delete=models.SET_NULL, null=True)
-#     description = models.TextField(max_length=200, blank=True)
-#     semester = models.CharField(choices=SEMESTER, max_length=200)
-#
-#     def __str__(self):
-#         return self.subjectCode + " (" + self.subjectTitle + ")"
-#
-#     def get_absolute_url(self):
-#         return reverse('subject_list', kwargs={'pk': self.pk})
+    def __str__(self):
+        return self.subjectCode + " (" + self.subjectName + ")"
+
+    def get_absolute_url(self):
+        return reverse('subject_list', kwargs={'pk': self.pk})
+
 
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -154,12 +144,6 @@ class Singleton(object):
 
 class Director(models.Model, Singleton):
     user = models.OneToOneField(Teacher, on_delete=models.CASCADE)
-
-
-#
-# class Director(models.Model, metaclass=Singleton):
-#     user = models.OneToOneField(Teacher, on_delete=models.CASCADE)
-#     user.is_superuser = True
 
 
 PASS = "PASS"
@@ -189,7 +173,7 @@ WEIGHT = (
 class Grade(models.Model):
     student = models.ForeignKey(Student, on_delete=models.SET_NULL, null=True)
     teacher = models.ForeignKey(Teacher, on_delete=models.SET_NULL, null=True)
-    subject = models.CharField(choices=SUBJECTS, max_length=30, blank=True)
+    subject = models.ForeignKey(Subject, on_delete=models.SET_NULL, null=True)
     date = models.DateField(blank=True, null=True)
     grade = models.CharField(choices=GRADE, max_length=1, blank=True)
     weight = models.CharField(choices=WEIGHT, max_length=1, blank=True)
