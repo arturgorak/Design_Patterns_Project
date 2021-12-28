@@ -21,6 +21,7 @@ Update Results
         <th>Subject</th>
         <th>Grade</th>
         <th>Weight</th>
+        <th>Comment</th>
         <th>Delete</th>
 
       </tr>
@@ -36,6 +37,7 @@ Update Results
           <td>{{form.instance.subject.subjectName}}</td>
           <td style="width: 10%;">{{form.grade| add_class:"form-control form-control-sm"}}</td>
           <td style="width: 10%;">{{form.weight | add_class:"form-control form-control-sm"}}</td>
+          <td style="width: 10%;">{{form.comment | add_class:"form-control form-control-sm"}}</td>
           <td>{{form.DELETE}}</td>
         </tr>
       {% endfor %}

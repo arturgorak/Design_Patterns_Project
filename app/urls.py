@@ -20,4 +20,5 @@ urlpatterns = [
     path('profile/', profile, name='profile'),
     path('add_grade/', create_grade, name="add_grade"),
     path('edit_grade/', edit_grades, name="edit_grades"),
+    path("grades_list", GradeListView.as_view(), name="grades_list"),
 ]

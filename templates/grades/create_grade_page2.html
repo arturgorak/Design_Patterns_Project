@@ -18,17 +18,6 @@
     {{ form.non_field_errors }}
 
     <div class="form-group row">
-      {{ form.session.errors }}
-      <label class="col-2" for="{{ form.session.id_for_label }}">{{ form.session.label_tag}}</label>
-      <div class="col">{{ form.session | add_class:"form-control" }}</div>
-    </div>
-
-    <div class="form-group row">
-      {{ form.term.errors }}
-      <label class="col-2" for="{{ form.term.id_for_label }}">{{ form.term.label_tag}}</label>
-      <div class="col">{{ form.term | add_class:"form-control" }}</div>
-    </div>
-    <div class="form-group row">
       {{ form.subject.errors }}
       <label class="col-2" for="{{ form.subject.id_for_label }}">{{ form.subject.label_tag}}</label>
       <div class="col">{{ form.subject | add_class:"form-check-input" }}</div>

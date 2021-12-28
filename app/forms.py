@@ -373,6 +373,16 @@ class GradeAddForm(forms.Form):
         queryset=Subject.objects.all(), widget=forms.CheckboxSelectMultiple
     )
 
+    def __init__(self, user, *args, **kwargs):
+        print("konstruktor")
+        super(GradeAddForm, self).__init__(*args, **kwargs)
+        print("konstruktor2")
+        self.fields['subject'].queryset = Subject.objects.filter(teacher=user.teacher)
+        print("konstruktor3")
+
+
+
+
 
 EditGrades = modelformset_factory(
     Grade, fields=("grade", "weight", "date", "comment"), extra=0, can_delete=True

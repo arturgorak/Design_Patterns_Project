@@ -1,6 +1,8 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth import login, logout, authenticate
 from django.http import HttpResponse
+import datetime
+from django.views.generic import View
 from .forms import *
 from django.contrib.messages.views import SuccessMessageMixin
 from django.forms import widgets
@@ -204,18 +206,26 @@ def profile_update(request):
     return render(request, 'profile/profile_update.html', {'form': form})
 
 
+def students_with_teacher_learns(teacher_tmp):
+    students= Student.objects.all()
+    subject_tmp = teachers_subject(teacher_tmp)
+    sub_array = []
+    for x in students:
+
+        for y in subject_tmp:
+            if x.year == y.year and x.students_class == y.branch:
+                sub_array.append(x)
+                break
+    return sub_array
+
+
 @teacher_required()
 def create_grade(request):
-    students = Student.objects.all()
+    students = sorted(students_with_teacher_learns(request.user.teacher), key=lambda x: x.user.last_name, reverse=False)
     if request.method == "POST":
-        print("chujnia")
-        # after visiting the second page
+        # second page
         if "finish" in request.POST:
-            form = GradeAddForm(request.POST)
-
-
-
-
+            form = GradeAddForm(request.user, request.POST)
             if form.is_valid():
                 subjects = form.cleaned_data["subject"]
                 students = request.POST["students"]
@@ -227,6 +237,8 @@ def create_grade(request):
                             check = Grade.objects.filter(
                                 subject=subject,
                                 student=stu,
+                                teacher=request.user.teacher,
+                                date=datetime.date.today(),
                             ).first()
                             if not check:
                                 grades.append(
@@ -234,37 +246,38 @@ def create_grade(request):
 
                                         subject=subject,
                                         student=stu,
+                                        teacher=request.user.teacher,
+                                        date=datetime.date.today(),
 
                                     )
                                 )
 
                 Grade.objects.bulk_create(grades)
+
                 return redirect("edit_grades")
 
         # after choosing students
         id_list = request.POST.getlist("students")
         if id_list:
-            form = GradeAddForm(
-                initial={}
-            )
+            form = GradeAddForm(request.user)
             studentlist = ",".join(id_list)
-            print("here we go")
-            return render(
-                request,
-                "grades/create_grade_page2.html",
-                {"students": studentlist, "form": form, "count": len(id_list)},
-            )
+            context = {"students": studentlist, "form": form, "count": len(id_list)}
+
+            return render(request, "grades/create_grade_page2.html", context ,)
         else:
             messages.warning(request, "You didnt select any student.")
 
     context = {
         "students": students,
+        "teacher": request.user.teacher,
     }
+
     return render(request, "grades/create_grade.html", context)
 
 
 @teacher_required()
 def edit_grades(request):
+
     if request.method == "POST":
         form = EditGrades(request.POST)
         if form.is_valid():
@@ -272,7 +285,35 @@ def edit_grades(request):
             messages.success(request, "Grades successfully updated")
             return redirect("edit_grades")
     else:
-        grades = Grade.objects.all()
+        grades = Grade.objects.filter(student__grade__teacher= request.user.teacher)
         form = EditGrades(queryset=grades)
 
     return render(request, "grades/edit_grades.html", {"formset": form})
+
+
+class GradeListView(View):
+    def get(self, request, *args, **kwargs):
+        grades = Grade.objects.all()
+        bulk = {}
+
+        for grade in grades:
+            print(grade.grade)
+            test_total = 0
+            exam_total = 0
+            subjects = []
+            for subject in grades:
+                if subject.student == grade.student:
+                    subjects.append(subject)
+                    #test_total += subject.test_score
+                    #exam_total += subject.exam_score
+
+            bulk[grade.student.id] = {
+                "student": grade.student,
+                "subjects": subjects,
+                "test_total": test_total,
+                "exam_total": exam_total,
+                "total_total": test_total + exam_total,
+            }
+
+        context = {"results": bulk}
+        return render(request, "grades/grades_list.html", context)

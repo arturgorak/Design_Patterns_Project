@@ -14,6 +14,7 @@
   <table id="studenttable" class="table table-sm table-bordered" data-page-length='100'>
     <thead class="thead-light">
       <tr>
+        <th>Surname</th>
         <th>Name</th>
         <th>Current Class</th>
         <th><input type="checkbox" id="selecter"></th>
@@ -23,7 +24,8 @@
       {% for student in students %}
         <tr>
 
-          <td>{{student.user.get_full_name}} </td>
+          <td>{{student.user.last_name}} </td>
+          <td>{{student.user.first_name}} </td>
           <td>{{student.year}}{{ student.students_class }}</td>
           <td><input type="checkbox" id="{{ student.id }}" name="students" value="{{ student.id}}"></td>
         </tr>
