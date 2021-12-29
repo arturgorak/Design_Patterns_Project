@@ -17,26 +17,30 @@
                     <th>Nr</th>
                     <th>Name</th>
                     <th>Surname</th>
-                    <th>Subjects</th>
+                    {% if request.user.is_superuser or request.user.is_director %}
                     <th>Action</th>
+                    {% endif %}
                 </tr>
                 {% for t in teachers %}
                 <tr>
                     <td> {{ forloop.counter }}</td>
                     <td>{{t.user.first_name}} </td>
                     <td>{{t.user.last_name}} </td>
+                    {% if request.user.is_superuser or request.user.is_director %}
                     <td>
                         <a data-toggle="tooltip" title="Edit" href="{% url 'edit_teacher' pk=t.pk %}" class="blue-text"><i class="fa fa-pencil"></i></a>
                         <a data-toggle="tooltip" title="Delete" href="{% url 'delete_teacher' pk=t.pk %}" class="red-text"><i class="fa fa-times"></i></a>
 
                     </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </table>
 
         </div>
+    {% if request.user.is_superuser or request.user.is_director %}
     <a class="btn btn-primary" href="{% url 'teacher_add' %}" role="button">Add Teacher</a>
-
+    {% endif %}
     </div>
 </div>
 

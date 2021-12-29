@@ -7,6 +7,7 @@ from .validators import ASCIIUsernameValidator
 class User(AbstractUser):
     is_student = models.BooleanField(default=False)
     is_teacher = models.BooleanField(default=False)
+    is_director = models.BooleanField(default=False)
     phone = models.CharField(max_length=60, blank=True, null=True)
     address = models.CharField(max_length=60, blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
@@ -16,7 +17,7 @@ class User(AbstractUser):
     def get_full_name(self):
         full_name = self.username
         if self.first_name and self.last_name:
-            full_name = self.first_name + " " + self.last_name
+            full_name = self.last_name + " " + self.first_name
         return full_name
 
 

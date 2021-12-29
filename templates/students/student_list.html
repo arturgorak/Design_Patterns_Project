@@ -9,8 +9,11 @@
     <br><br>
 <div class="row">
     <div class="col-md-9">
-        <h5>Students:</h5>
-
+        {% if  request.user.is_student%}
+         <h5>Students from {{request.user.student.year }}{{request.user.student.students_class}} class:</h5>
+        {% else %}
+            <h5>Students:</h5>
+        {% endif %}
         <div class="card card-body">
             <table class="table table-sm">
                 <tr>
@@ -18,7 +21,9 @@
                     <th>Name</th>
                     <th>Surname</th>
                     <th>Class</th>
-                    <th>Action</th>
+                    {% if request.user.is_superuser or request.user.is_director %}
+                     <th>Action</th>
+                    {% endif %}
                 </tr>
                 {% for s in students %}
                 <tr>
@@ -26,18 +31,22 @@
                     <td>{{s.user.first_name}} </td>
                     <td>{{s.user.last_name}} </td>
                     <td>{{s.year}}{{s.students_class}} </td>
+                    {% if request.user.is_superuser or request.user.is_director %}
                     <td>
 
                         <a data-toggle="tooltip" title="Edit" href="{% url 'edit_student' pk=s.pk %}" class="blue-text"><i class="fa fa-pencil"></i></a>
                         <a data-toggle="tooltip" title="Delete" href="{% url 'delete_student' pk=s.pk %}" class="red-text"><i class="fa fa-times"></i></a>
 
                     </td>
+                    {% endif %}
                 </tr>
                 {% endfor %}
             </table>
 
         </div>
+    {% if request.user.is_superuser or request.user.is_director %}
     <a class="btn btn-primary" href="{% url 'student_add' %}" role="button">Add Student</a>
+    {% endif %}
     </div>
 </div>
 

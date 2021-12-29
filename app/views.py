@@ -1,16 +1,12 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth import login, logout, authenticate
-from django.http import HttpResponse
 import datetime
 from django.views.generic import View
 from .forms import *
-from django.contrib.messages.views import SuccessMessageMixin
-from django.forms import widgets
 from django.views.generic.edit import CreateView
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from .decorators import *
-from collections.abc import Iterable, Iterator
 
 
 def loginPage(request):
@@ -25,14 +21,15 @@ def loginPage(request):
                 login(request, user)
                 return redirect('/')
         context = {}
+
         return render(request, 'registration/login.html', context)
 
-
+@login_required
 def logoutPage(request):
     logout(request)
     return redirect('/')
 
-
+@login_required
 def home(request):
 
     context = {
@@ -47,8 +44,13 @@ def home(request):
     return render(request, 'home.html', context)
 
 
+@login_required
 def student_list(request):
-    students = Student.objects.all()
+    if request.user.is_student:
+        students = Student.objects.filter(students_class=request.user.student.students_class)\
+            .filter(year=request.user.student.year)
+    else:
+        students = Student.objects.all()
     context = {
         'students': students,
 
@@ -70,12 +72,16 @@ class StudentAddView(CreateView):
         return redirect('student_list')
 
 
+@login_required
+@director_required
 def delete_student(request, pk):
     student = get_object_or_404(Student, pk=pk)
     student.delete()
     return redirect('student_list')
 
 
+@login_required
+@director_required
 def edit_student(request, pk):
     student = get_object_or_404(Student, pk=pk)
     if request.method == "POST":
@@ -101,6 +107,7 @@ def teachers_subject(teacher):
     return sub_array
 
 
+@login_required
 def teacher_list(request):
     teachers = Teacher.objects.all()
     subject_list = []
@@ -134,19 +141,22 @@ class TeacherAddView(CreateView):
         return redirect('teacher_list')
 
 
+@login_required
+@director_required()
 def delete_teacher(request, pk):
     teacher = get_object_or_404(Teacher, pk=pk)
     teacher.delete()
     return redirect('teacher_list')
 
 
+@login_required
+@director_required()
 def edit_teacher(request, pk):
     # teacher = get_object_or_404(Teacher, pk=pk)
     teacher = Teacher.objects.get(pk=pk)
     if request.method == "POST":
         form = TeacherAddForm(request.POST, instance=teacher)
 
-        print("teacher dupaaaaaaaaaaaaaaaaaaaaaaaaaaaaa")
         if not form.is_valid():
             print(form.errors)
         if form.is_valid():
@@ -165,6 +175,7 @@ def edit_teacher(request, pk):
     return render(request, 'teachers/add_teacher.html', {'form': form})
 
 
+@login_required
 def profile(request):
     if request.user.is_teacher:
         subjects = teachers_subject(request.user.teacher)
@@ -180,6 +191,7 @@ def profile(request):
         return render(request, 'profile/profile.html', {"staff": staff})
 
 
+@login_required
 def profile_update(request):
     user = request.user.id
     user = User.objects.get(pk=user)
@@ -219,6 +231,7 @@ def students_with_teacher_learns(teacher_tmp):
     return sub_array
 
 
+@login_required
 @teacher_required()
 def create_grade(request):
     students = sorted(students_with_teacher_learns(request.user.teacher), key=lambda x: x.user.last_name, reverse=False)
@@ -275,6 +288,7 @@ def create_grade(request):
     return render(request, "grades/create_grade.html", context)
 
 
+@login_required
 @teacher_required()
 def edit_grades(request):
 
@@ -285,7 +299,11 @@ def edit_grades(request):
             messages.success(request, "Grades successfully updated")
             return redirect("edit_grades")
     else:
-        grades = Grade.objects.filter(student__grade__teacher= request.user.teacher)
+
+        if request.user.is_director or request.user.is_superuser:
+            grades = Grade.objects.all()
+        else:
+            grades = Grade.objects.filter(student__grade__teacher=request.user.teacher)
         form = EditGrades(queryset=grades)
 
     return render(request, "grades/edit_grades.html", {"formset": form})
@@ -294,18 +312,23 @@ def edit_grades(request):
 class GradeListView(View):
     def get(self, request, *args, **kwargs):
         grades = Grade.objects.all()
+
+        if request.user.is_director or request.user.is_superuser:
+            grades = Grade.objects.all()
+        elif request.user.is_teacher:
+            grades = Grade.objects.filter(teacher=request.user.teacher)
+        elif request.user.is_student:
+            grades = Grade.objects.filter(student=request.user.student)
+
         bulk = {}
 
         for grade in grades:
-            print(grade.grade)
             test_total = 0
             exam_total = 0
             subjects = []
             for subject in grades:
                 if subject.student == grade.student:
                     subjects.append(subject)
-                    #test_total += subject.test_score
-                    #exam_total += subject.exam_score
 
             bulk[grade.student.id] = {
                 "student": grade.student,
