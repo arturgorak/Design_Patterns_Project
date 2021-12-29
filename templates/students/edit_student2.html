@@ -2,17 +2,9 @@
 
 {% block content %}
 <div class="container-fluid mt-4">
-        {% if messages %}
-        {% for message in messages %}
-          <div class="alert alert-success alert-dismissable">
-            <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-            {{ message }}
-          </div>
-        {% endfor %}
-      {% endif %}
-  Add new {{ user_type }}
+  Edit {{ user_type }}
 <!-- Extended material form grid -->
-
+<form method="post">{% csrf_token %}
   <!-- Grid row -->
   <div class="form-row">
     <!-- Grid column -->
@@ -21,11 +13,37 @@
       <div class="md-form form-group">
         <i class="fa fa-user prefix"></i>
                                    {{ form.username }}
+        <label for="inputEmail4MD">{{ form.username.label }}</label>
+        <span style="color: red"> {{ form.username.errors }} </span>
       </div>
     </div>
     <!-- Grid column -->
 </div>
+<div class="form-row">
+    <!-- Grid column -->
+    <div class="col-md-3">
+      <!-- Material input -->
+      <div class="md-form form-group">
+        <i class="fa fa-lock prefix"></i>
+        {{ form.password1 }}
+        <label for="inputPassword4MD">{{ form.password1.label }}</label>
+        <span style="color: red">{{ form.password1.errors }}</span>
+      </div>
+    </div>
+    <!-- Grid column -->
 
+        <!-- Grid column -->
+    <div class="col-md-3">
+      <!-- Material input -->
+      <div class="md-form form-group">
+        <i class="fa fa-lock prefix"></i>
+        {{ form.password2 }}
+        <label for="inputPassword4MD">{{ form.password1.label }}</label>
+        <span style="color: red">{{ form.password2.errors }}</span>
+      </div>
+    </div>
+    <!-- Grid column -->
+  </div>
   <!-- Grid row -->
   <div class="form-row">
     <!-- Grid column -->
@@ -34,17 +52,20 @@
       <div class="md-form form-group">
         <i class="fa fa-dot-circle-o prefix"></i>
        {{ form.firstname }}
-
+        <label for="inputCityMD">{{ form.firstname.label }}</label>
+        <span style="color: red">{{ form.firstname.errors }}</span>
       </div>
     </div>
     <!-- Grid column -->
+
     <!-- Grid column -->
     <div class="col-md-4">
       <!-- Material input -->
       <div class="md-form form-group">
         <i class="fa fa-dot-circle-o prefix"></i>
         {{ form.lastname }}
-
+        <label for="inputZipMD">{{ form.lastname.label }}</label>
+        <span style="color: red">{{ form.lastname.errors }}</span>
       </div>
     </div>
 
@@ -55,19 +76,25 @@
 
     <div class="col-md-1">
       <!-- Material input -->
+      <div>
+        <label for="inputCityMD">{{ form.year.label }}</label>
+      </div>
       <div class="md-form form-group">
         <i class="fa fa-dot-bar prefix"></i>
        {{ form.year }}
-
+       <span style="color: red">{{ form.year.errors }}</span>
       </div>
     </div>
 
       <div class="col-md-1">
       <!-- Material input -->
+      <div>
+        <label for="inputCityMD">{{ form.branch.label }}</label>
+      </div>
       <div class="md-form form-group">
         <i class="fa fa-dot-bar prefix"></i>
        {{ form.branch }}
-
+       <span style="color: red">{{ form.branch.errors }}</span>
       </div>
     </div>
     </div>
@@ -113,6 +140,7 @@
 
 
   </div>
-
+  <button type="submit" class="btn btn-primary btn-md">Save</button>
+</form>
 </div>
 {% endblock %}

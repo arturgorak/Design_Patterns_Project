@@ -76,7 +76,9 @@ class StudentAddView(CreateView):
 @director_required
 def delete_student(request, pk):
     student = get_object_or_404(Student, pk=pk)
+    student.user.delete()
     student.delete()
+    messages.success(request, "Successfully deleted")
     return redirect('student_list')
 
 
@@ -88,13 +90,23 @@ def edit_student(request, pk):
         form = StudentAddForm(request.POST, instance=student)
 
         if form.is_valid():
-            student.save()
+            student.user.password1 = form.cleaned_data.get("password1")
+            student.user.password2 = form.cleaned_data.get("password2")
+            student.year = form.cleaned_data.get("year")
+            student.user.first_name = form.cleaned_data.get("firstname")
+            student.user.username = form.cleaned_data.get("username")
+            student.user.last_name = form.cleaned_data.get("lastname")
+            student.students_class = form.cleaned_data.get("branch")
+            student.user.email = form.cleaned_data.get("email")
+            student.user.address = form.cleaned_data.get("address")
+            student.user.phone = form.cleaned_data.get("phone")
+            student.user.save()
             messages.success(request, "Successfully Updated")
             return redirect('student_list')
     else:
 
         form = StudentAddForm(instance=student)
-    return render(request, 'students/edit_student.html', {'form': form})
+    return render(request, 'students/edit_student2.html', {'form': form})
 
 
 def teachers_subject(teacher):
@@ -112,12 +124,8 @@ def teacher_list(request):
     teachers = Teacher.objects.all()
     subject_list = []
 
-
     for x in teachers:
         subject_list.append(teachers_subject(x))
-
-    #
-
 
     context = {
         'teachers': teachers,
@@ -145,34 +153,37 @@ class TeacherAddView(CreateView):
 @director_required()
 def delete_teacher(request, pk):
     teacher = get_object_or_404(Teacher, pk=pk)
+    teacher.user.delete()
     teacher.delete()
+    messages.success(request, "Successfully deleted")
     return redirect('teacher_list')
 
 
 @login_required
 @director_required()
 def edit_teacher(request, pk):
-    # teacher = get_object_or_404(Teacher, pk=pk)
-    teacher = Teacher.objects.get(pk=pk)
+    teacher = get_object_or_404(Teacher, pk=pk)
+    #teacher = Teacher.objects.get(pk=pk)
     if request.method == "POST":
         form = TeacherAddForm(request.POST, instance=teacher)
-
         if not form.is_valid():
             print(form.errors)
         if form.is_valid():
             teacher.user.password1 = form.cleaned_data.get("password1")
             teacher.user.password2 = form.cleaned_data.get("password2")
-            teacher.first_name = form.cleaned_data.get("firstname")
+            teacher.user.first_name = form.cleaned_data.get("firstname")
+            teacher.user.username = form.cleaned_data.get("username")
             teacher.user.last_name = form.cleaned_data.get("lastname")
             teacher.user.email = form.cleaned_data.get("email")
             teacher.user.address = form.cleaned_data.get("address")
             teacher.user.phone = form.cleaned_data.get("phone")
-            teacher.save()
+            teacher.user.save()
+            #teacher.save()
             messages.success(request, "Successfully Updated")
             return redirect('teacher_list')
     else:
         form = TeacherAddForm(instance=teacher)
-    return render(request, 'teachers/add_teacher.html', {'form': form})
+    return render(request, 'teachers/edit_teacher2.html', {'form': form})
 
 
 @login_required
@@ -219,7 +230,7 @@ def profile_update(request):
 
 
 def students_with_teacher_learns(teacher_tmp):
-    students= Student.objects.all()
+    students = Student.objects.all()
     subject_tmp = teachers_subject(teacher_tmp)
     sub_array = []
     for x in students:
@@ -266,7 +277,7 @@ def create_grade(request):
                                 )
 
                 Grade.objects.bulk_create(grades)
-
+                messages.success(request, "Successfully Updated")
                 return redirect("edit_grades")
 
         # after choosing students
@@ -276,7 +287,7 @@ def create_grade(request):
             studentlist = ",".join(id_list)
             context = {"students": studentlist, "form": form, "count": len(id_list)}
 
-            return render(request, "grades/create_grade_page2.html", context ,)
+            return render(request, "grades/create_grade_page2.html", context,)
         else:
             messages.warning(request, "You didnt select any student.")
 
