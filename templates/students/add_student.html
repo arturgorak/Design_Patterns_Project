@@ -97,7 +97,32 @@
        <span style="color: red">{{ form.branch.errors }}</span>
       </div>
     </div>
+
+
+          <div class="col-md-1">
+      <!-- Material input -->
+      <div>
+        <label for="inputCityMD">{{ form.sex.label }}</label>
+      </div>
+      <div class="md-form form-group">
+        <i class="fa fa-dot-bar prefix"></i>
+       {{ form.sex }}
+       <span style="color: red">{{ form.sex.errors }}</span>
+      </div>
     </div>
+    <div>
+        <label for="inputCityMD">{{ form.picture.label }}</label>
+      </div>
+      <div class="md-form form-group">
+        <i class="fa fa-dot-bar prefix"></i> {{ form.picture }}
+       <span style="color: red">{{ form.picture.errors }}</span>
+      </div>
+    </div>
+
+
+
+
+
   <!-- Grid row -->
   <div class="form-row">
 
@@ -137,6 +162,7 @@
         <span style="color: red">{{ form.phone.errors }}</span>
       </div>
     </div>
+
 
 
   </div>

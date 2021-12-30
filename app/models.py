@@ -96,14 +96,6 @@ class Class(models.Model):
         verbose_name_plural = 'Classes'
 
 
-#
-# def get_total_unit():
-#     t = 0
-#     total = Subject.objects.all()
-#     for i in total:
-#         t += i
-#     return i
-
 
 class Subject(models.Model):
     subjectName = models.CharField(choices=SUBJECTS, max_length=200)

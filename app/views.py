@@ -24,10 +24,12 @@ def loginPage(request):
 
         return render(request, 'registration/login.html', context)
 
+
 @login_required
 def logoutPage(request):
     logout(request)
     return redirect('/')
+
 
 @login_required
 def home(request):
@@ -88,7 +90,7 @@ def edit_student(request, pk):
     student = get_object_or_404(Student, pk=pk)
     if request.method == "POST":
         form = StudentAddForm(request.POST, instance=student)
-
+        print(form.errors)
         if form.is_valid():
             student.user.password1 = form.cleaned_data.get("password1")
             student.user.password2 = form.cleaned_data.get("password2")
@@ -105,8 +107,19 @@ def edit_student(request, pk):
             return redirect('student_list')
     else:
 
-        form = StudentAddForm(instance=student)
-    return render(request, 'students/edit_student2.html', {'form': form})
+        form = StudentAddForm(instance=student, initial={
+            'username': student.user.username,
+            'lastname': student.user.last_name,
+            'firstname': student.user.first_name,
+            'email': student.user.email,
+            'year': student.year,
+            'branch': student.students_class,
+            'password': student.user.password,
+            'password2': student.user.password,
+            'address': student.user.address,
+            'phone': student.user.phone,
+        })
+    return render(request, 'students/edit_student.html', {'form': form})
 
 
 def teachers_subject(teacher):
@@ -190,11 +203,25 @@ def edit_teacher(request, pk):
 def profile(request):
     if request.user.is_teacher:
         subjects = teachers_subject(request.user.teacher)
-        return render(request, 'profile/profile.html', {"subjects": subjects, })
+        teacher_class = Class.objects.filter(supervising_teacher=request.user.teacher)
+        class_count = len(teacher_class)
+        context = {
+            'subjects': subjects,
+            'class': teacher_class,
+            'count': class_count
+        }
+
+        return render(request, 'profile/profile.html', context)
     elif request.user.is_student:
         student = Student.objects.get(user__pk=request.user.id)
+        subjects = Subject.objects.filter(branch=request.user.student.students_class)\
+            .filter(year=request.user.student.year)
+        students_class = Class.objects.filter(branch=request.user.student.students_class)\
+            .filter(year=request.user.student.year)
         context = {
             'student': student,
+            'subjects': subjects,
+            'class': students_class
         }
         return render(request, 'profile/profile.html', context)
     else:
