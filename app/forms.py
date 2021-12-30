@@ -116,40 +116,6 @@ class StudentAddForm(UserCreationForm):
         return user
 
 
-class ChangePasswordForm(forms.ModelForm):
-    id = forms.CharField(widget=forms.HiddenInput())
-    password = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
-        label="Old password",
-        required=True)
-    password1 = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
-        label="New password",
-        required=True)
-    password2 = forms.CharField(
-        widget=forms.PasswordInput(attrs={'class': 'form-control'}),
-        label="Confirm new password",
-        required=True)
-
-    class Meta:
-        model = User
-        fields = ['id', 'password', 'password1', 'password2']
-
-    def clean(self):
-        super(ChangePasswordForm, self).clean()
-        password = self.cleaned_data.get('password')
-        password1 = self.cleaned_data.get('password1')
-        password2 = self.cleaned_data.get('password2')
-        id = self.cleaned_data.get('id')
-        user = User.objects.get(pk=id)
-        if not user.check_password(password):
-            self._errors['password'] = self.error_class([
-                'Old password don\'t match'])
-        if password1 and password1 != password2:
-            self._errors['password1'] = self.error_class([
-                'Passwords don\'t match'])
-        return self.cleaned_data
-
 
 class EditStudent(forms.ModelForm):
     first_name = forms.CharField(

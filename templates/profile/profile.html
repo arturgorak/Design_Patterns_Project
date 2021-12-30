@@ -1,9 +1,6 @@
 {% extends 'Links.html' %}
+{% load static %}
 {% load humanize %}
-
-
-{% block title %} {{ user|capfirst }}'s' Profile  {% endblock title %}
-
 
 {% block content %}
 <style type="text/css">
@@ -15,114 +12,142 @@ overflow-y: auto;
 }
 </style>
  <div class="container-fluid mt-5">
-<!-- Heading -->
 
-            <!-- Heading -->
+     <!-- Heading -->
 
   <div class="row">
     <div class="col-md-3">
 
     	<!-- Card -->
+<div class="card">
 
+  <!-- Card image -->
+  <div class="view overlay">
+    <a class="mask" href="#">
+      <div class="mask white-text">{{ user.get_full_name|capfirst }}</div>
+    </a>
+  </div>
 
-
-{% if request.user.is_teacher %}
+{% if user.is_teacher %}
     <!-- Card content -->
   <div class="card-body card-body-cascade text-center">
 
-    <small class="card-title">Name: {{ request.user.get_full_name|capfirst }}</small><br>
+    <small class="card-title"><b>Name: </b>{{ user.get_full_name }}</small><br>
     <small class="card-title">Role: Teacher </small><br>
+      {% if request.user.is_director %}
+          <small class="card-title">Second role: Director </small><br>
+      {% endif %}
+        {% if count != 0 %}
+          <small class="card-title">Raised Class: {{ class.0.year }}{{ class.0.branch }} </small><br>
+      {% endif %}
+      <a href="{% url 'edit_profile' %}" type="button" class="btn btn-outline-primary">Edit profile</a>
+      <a href="{% url 'change_password' %}" type="button" class="btn btn-outline-primary">Change password</a>
+
   </div>
 {% endif %}
 
-{% if request.user.is_student %}
-    <!-- Card content -->
-      <div class="form-row">
-    <!-- Grid column -->
-    <div class="col-md-4">
-      <!-- Material input -->
-        <span style="font-size: x-large"> <i class="fa fa-user-circle" aria-hidden="true"></i> {{ request.user.first_name}}  </span>
-
-      </div>
-          <div class="col-md-10">
-      <!-- Material input -->
-         <span style="font-size: x-large"> <i class="fa fa-user-circle-o" aria-hidden="true"></i> {{ request.user.last_name}}</span>
-
-      </div>
-          <div class="col-md-10">
-      <!-- Material input -->
-         <span style="font-size: x-large"> <i class="fa fa-address-book-o" aria-hidden="true"></i>  Student   </span>
-
-      </div>
-            </div>
-
-    </div>
-    <!-- Grid column -->
-</div>
-
-
-    </div>
-
-
-
-
-
-
-
-
-
-
-
-
-{% endif %}
-
-
-{% if request.user.is_superuser %}
+{% if user.is_student %}
     <!-- Card content -->
   <div class="card-body card-body-cascade text-center">
 
-    <small>Name: {{ request.user.get_full_name|capfirst }}</small><br>
-    <small>Role: Superuser</small>
+    <small class="card-title">Name: {{ user.first_name }}</small><br>
+    <small class="card-title">Surname: {{ user.last_name }}</small><br>
+    <small class="card-title">Role: Student</small><br>
+    <small class="card-title">Class: {{ user.student.year }}{{ user.student.students_class }}</small><br>
+    <small class="card-title">Supervising teacher: {{ class.0.supervising_teacher.user.get_full_name }}</small><br>
+      <a href="{% url 'edit_profile' %}" type="button" class="btn btn-outline-primary">Edit profile</a>
+      <a href="{% url 'change_password' %}" type="button" class="btn btn-outline-primary">Change password</a>
+
+  </div>
+
+{% endif %}
+
+
+{% if user.is_superuser %}
+    <!-- Card content -->
+  <div class="card-body card-body-cascade text-center">
+
+    <small>Name: {{ user.get_full_name }}</small><br>
+    <small>Role: Superuser</small><br>
+      <a href="{% url 'edit_profile' %}" type="button" class="btn btn-outline-primary">Edit profile</a>
+      <a href="{% url 'change_password' %}" type="button" class="btn btn-outline-primary">Change password</a>
   </div>
 {% endif %}
 
 
-
+</div>
 <!-- Card -->
     </div>
-    {% if request.user.is_teacher %}
+    {% if user.is_teacher %}
     <div class="col-md-7 text-center">
-      <p>Subjects</p>
+      <p>Assigned Courses</p>
   <div class="table-wrapper-scroll-y">
 
   <table class="table table-bordered table-striped">
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">Subject Code</th>
-      <th scope="col">Subject Name</th>
-      <th scope="col">Semester</th>
-      <th scope="col">Description</th>
-      <th scope="col">Action</th>
+      <th scope="col">Subject's Name</th>
+      <th scope="col">Subject's code</th>
+      <th scope="col">Class</th>
     </tr>
   </thead>
   <tbody>
     {% for subject in subjects %}
     <tr>
       <th scope="row">{{ forloop.counter }}</th>
+      <td>{{ subject.subjectName}}</td>
       <td>{{ subject.subjectCode }}</td>
-      <td>{{ subject.subjectName }}</td>
-      <td>{{ subject.semester }}</td>
-      <td>{{ subject.description}}</td>
+      <td>{{ subject.year }}{{ subject.branch }}</td>
     </tr>
     {% empty %}
+    <tr>
+
+      <td></td>
+      <td>No subjects!</td>
+      <td></td>
+    </tr>
   {% endfor %}
   </tbody>
 </table>
     </div>
   </div>
   {% endif %}
-  {% if request.user.is_superuser %}
+{% if user.is_student %}
+    <div class="col-md-7 text-center">
+      <p>Your subjects</p>
+  <div class="table-wrapper-scroll-y">
+
+  <table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Subject Name</th>
+      <th scope="col">Subject ID</th>
+      <th scope="col">Teacher</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for subject in subjects %}
+    <tr>
+      <th scope="row">{{ forloop.counter }}</th>
+      <td>{{ subject.subjectName  }}</td>
+      <td>{{ subject.subjectCode }}</td>
+      <td>{{ subject.teacher.user.get_full_name }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td></td>
+      <td>No subjects!</td>
+      <td></td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+    </div>
+  </div>
+  {% endif %}
+  {% if user.is_superuser %}
     <div class="col-md-7 text-center">
       <p>All staff list</p>
   <div class="table-wrapper-scroll-y">
@@ -131,28 +156,24 @@ overflow-y: auto;
   <thead>
     <tr>
       <th scope="col">#</th>
-      <th scope="col">Name</th>
+      <th scope="col">Firstname</th>
+      <th scope="col">Lastname</th>
       <th scope="col">Address</th>
-      <th scope="col">Picture</th>
-      <th scope="col">Action</th>
+      <th scope="col">Phone</th>
+      <th scope="col">E-mail</th>
+
     </tr>
   </thead>
   <tbody>
     {% for staff in staff %}
     <tr>
       <th scope="row">{{ forloop.counter }}</th>
-      <td>{{ staff.get_full_name|capfirst }}</td>
+      <td>{{ staff.first_name }}</td>
+      <td>{{ staff.last_name }}</td>
       <td>{{ staff.address }}</td>
-      <td>{{ staff.get_picture.url }}</td>
-      <td>
-        <span class="table-remove">
-          <a href="{% url 'user_profile' id=staff.pk%}" class="btn btn-info btn-rounded btn-sm my-0">View</a>
-        </span>
+      <td>{{ staff.phone }}</td>
+      <td>{{ staff.email }}</td>
 
-        <span class="table-remove">
-          <a href="" class="btn btn-info btn-rounded btn-sm my-0">Delete</a>
-        </span>
-      </td>
     </tr>
     {% empty %}
     <tr>
@@ -168,6 +189,19 @@ overflow-y: auto;
   </div>
   {% endif %}
 
+
+  <div class="col-md-2 text-center">
+    <small> Registered:<br><date>{{ user.date_joined|naturaltime }}</date></small><hr />
+    <small> Last Login:<br><date>
+    {% if user.last_login == None %} 
+          Never 
+    {% else %}
+      {{ user.last_login|naturaltime }}
+    {% endif %}</date></small><hr />
+    <small> Phone:<br><date>{% if user.phone %}{{ user.phone }}{% endif %}</date></small><hr />
+    <small> Email:<br><date>{{ user.email }}</date></small><hr />
+    <small> Address:<br><date>{{ user.address }}</date></small>
+  </div>
 </div>
  </div>
 {% endblock %}

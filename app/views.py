@@ -1,12 +1,18 @@
 from django.shortcuts import redirect, render
 from django.contrib.auth import login, logout, authenticate
-import datetime
+from datetime import datetime
 from django.views.generic import View
 from .forms import *
 from django.views.generic.edit import CreateView
 from django.shortcuts import get_object_or_404
 from django.contrib import messages
 from .decorators import *
+from django.contrib.auth import update_session_auth_hash
+
+from django.contrib import messages
+from django.contrib.auth import update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
+from django.shortcuts import render, redirect
 
 
 def loginPage(request):
@@ -115,11 +121,12 @@ def edit_student(request, pk):
             'year': student.year,
             'branch': student.students_class,
             'password': student.user.password,
-            'password2': student.user.password,
+            'password2': student.user.password2,
+            'password1':student.user.password1,
             'address': student.user.address,
             'phone': student.user.phone,
         })
-    return render(request, 'students/edit_student.html', {'form': form})
+    return render(request, 'students/edit_student2.html', {'form': form})
 
 
 def teachers_subject(teacher):
@@ -256,6 +263,24 @@ def profile_update(request):
     return render(request, 'profile/profile_update.html', {'form': form})
 
 
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)  # Important!
+            messages.success(request, 'Your password was successfully updated!')
+            return redirect('change_password')
+        else:
+            messages.error(request, 'Please correct the error below.')
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'profile/change_password.html', {
+        'form': form
+    })
+
+
 def students_with_teacher_learns(teacher_tmp):
     students = Student.objects.all()
     subject_tmp = teachers_subject(teacher_tmp)
@@ -276,7 +301,10 @@ def create_grade(request):
     if request.method == "POST":
         # second page
         if "finish" in request.POST:
-            form = GradeAddForm(request.user, request.POST)
+            form = GradeAddForm(request.user, request.POST,
+                                initial={
+                                    'date': datetime.now
+                                })
             if form.is_valid():
                 subjects = form.cleaned_data["subject"]
                 students = request.POST["students"]
@@ -289,7 +317,7 @@ def create_grade(request):
                                 subject=subject,
                                 student=stu,
                                 teacher=request.user.teacher,
-                                date=datetime.date.today(),
+
                             ).first()
                             if not check:
                                 grades.append(
@@ -298,7 +326,7 @@ def create_grade(request):
                                         subject=subject,
                                         student=stu,
                                         teacher=request.user.teacher,
-                                        date=datetime.date.today(),
+
 
                                     )
                                 )

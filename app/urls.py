@@ -19,6 +19,7 @@ urlpatterns = [
     path('teacher_edit/<int:pk>/', edit_teacher, name="edit_teacher"),
     path('profile/', profile, name='profile'),
     path("edit_profile", profile_update, name="edit_profile"),
+    path("change_password", change_password, name="change_password"),
     path('add_grade/', create_grade, name="add_grade"),
     path('edit_grade/', edit_grades, name="edit_grades"),
     path("grades_list", GradeListView.as_view(), name="grades_list"),

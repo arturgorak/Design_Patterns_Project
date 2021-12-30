@@ -172,33 +172,6 @@ class Grade(models.Model):
     weight = models.CharField(choices=WEIGHT, max_length=1, blank=True)
     comment = models.CharField(max_length=200, blank=True)
 
-    # def calculate_gpa(self, total_unit_in_semester):
-    #     current_semester = Semester.objects.get(is_current_semester=True)
-    #     student = TakenSubject.objects.filter(student=self.student, subject__year=self.student.year,
-    #                                           subject__semester=current_semester)
-    #     p = 0
-    #     point = 0
-    #     for i in student:
-    #
-    #         if i.grade == "6":
-    #             point = 6
-    #         elif i.grade == "5":
-    #             point = 5
-    #         elif i.grade == "4":
-    #             point = 4
-    #         elif i.grade == "3":
-    #             point = 3
-    #         elif i.grade == "2":
-    #             point = 2
-    #         else:
-    #             point = 1
-    #         p += point
-    #     try:
-    #         gpa = (p / total_unit_in_semester)
-    #         return round(gpa, 1)
-    #     except ZeroDivisionError:
-    #         return 0
-
 
 class Result(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
