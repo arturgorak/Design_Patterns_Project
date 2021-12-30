@@ -23,5 +23,9 @@ urlpatterns = [
     path('add_grade/', create_grade, name="add_grade"),
     path('edit_grade/', edit_grades, name="edit_grades"),
     path("grades_list", GradeListView.as_view(), name="grades_list"),
+    path("subject_add", SubjectAddView.as_view(), name="subject_add"),
+    path("subject_list", subject_list, name="subject_list"),
+    path("subject_delete/<int:pk>/", delete_subject, name="subject_delete"),
+    path("subject_edit/<int:pk>/", edit_subject, name="subject_edit"),
 
 ]

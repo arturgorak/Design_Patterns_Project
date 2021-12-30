@@ -1,14 +1,10 @@
-from django.shortcuts import redirect, render
 from django.contrib.auth import login, logout, authenticate
 from datetime import datetime
 from django.views.generic import View
 from .forms import *
 from django.views.generic.edit import CreateView
 from django.shortcuts import get_object_or_404
-from django.contrib import messages
 from .decorators import *
-from django.contrib.auth import update_session_auth_hash
-
 from django.contrib import messages
 from django.contrib.auth import update_session_auth_hash
 from django.contrib.auth.forms import PasswordChangeForm
@@ -120,9 +116,6 @@ def edit_student(request, pk):
             'email': student.user.email,
             'year': student.year,
             'branch': student.students_class,
-            'password': student.user.password,
-            'password2': student.user.password2,
-            'password1':student.user.password1,
             'address': student.user.address,
             'phone': student.user.phone,
         })
@@ -389,8 +382,6 @@ class GradeListView(View):
         bulk = {}
 
         for grade in grades:
-            test_total = 0
-            exam_total = 0
             subjects = []
             for subject in grades:
                 if subject.student == grade.student:
@@ -399,10 +390,71 @@ class GradeListView(View):
             bulk[grade.student.id] = {
                 "student": grade.student,
                 "subjects": subjects,
-                "test_total": test_total,
-                "exam_total": exam_total,
-                "total_total": test_total + exam_total,
             }
 
         context = {"results": bulk}
         return render(request, "grades/grades_list.html", context)
+
+
+class SubjectAddView(CreateView):
+    model = Subject
+    form_class = SubjectAddForm
+    template_name = 'subjects/subject_add.html'
+
+    def form_valid(self, form):
+        form.save()
+        return redirect('subject_list')
+
+
+@login_required
+def subject_list(request):
+    subjects = sorted(Subject.objects.all(), key=lambda x: x.teacher.user.last_name, reverse=False)
+    context = {
+        'subjects': subjects,
+
+    }
+    return render(request, 'subjects/subject_list.html', context)
+
+
+def delete_subject(request, pk):
+    subject = get_object_or_404(Subject, pk=pk)
+    subject.delete()
+    messages.success(request, "Successfully deleted")
+    return redirect('subject_list')
+
+
+def edit_subject(request, pk):
+    subject = get_object_or_404(Subject, pk=pk)
+    if request.method == "POST":
+        form = SubjectAddForm(request.POST, instance=subject)
+        print(form.errors)
+        if form.is_valid():
+            subject.subjectCode = form.cleaned_data.get("subjectCode")
+            subject.subjectName = form.cleaned_data.get("subjectName")
+            subject.teacher = form.cleaned_data.get("teacher")
+            subject.description = form.cleaned_data.get("description")
+            subject.session = form.cleaned_data.get("session")
+            subject.semester = form.cleaned_data.get("semester")
+            subject.year = form.cleaned_data.get("year")
+            subject.branch = form.cleaned_data.get("branch")
+            subject.day = form.cleaned_data.get("day")
+            subject.number = form.cleaned_data.get("number")
+            subject.save()
+            messages.success(request, "Successfully Updated")
+            return redirect('subject_list')
+    else:
+
+        form = SubjectAddForm(instance=subject, initial={
+            'subjectCode': subject.subjectCode,
+            'subjectName': subject.subjectName,
+            'teacher': subject.teacher,
+            'description': subject.description,
+            'session': subject.session,
+            'semester': subject.semester,
+            'year': subject.year,
+            'branch': subject.branch,
+            'day': subject.day,
+            'number': subject.number
+
+        })
+    return render(request, 'subjects/subject_edit.html', {'form': form})

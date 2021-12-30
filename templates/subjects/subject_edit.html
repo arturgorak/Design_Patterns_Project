@@ -1,0 +1,100 @@
+{% extends 'Links.html' %}
+
+
+
+{% block content %}
+<div class="container-fluid mt-5">
+<div class="card">
+
+    <div class="card-body px-lg-5 pt-0">
+
+        <form method="post" class="md-form" style="color: #757575;">{% csrf_token %}
+             <div class="form-row">
+                <div class="col">
+                    <!-- First name -->
+                    <div class="md-form">
+                        {{ form.subjectCode }}
+                        <label for="materialRegisterFormFirstName">{{ form.subjectCode.label }}</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <!-- Last name -->
+                    <div class="md-form">
+
+                        <label for="materialRegisterFormLastName">{{ form.subjectName.label }}</label>
+                        {{ form.subjectName }}
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col">
+                    <!-- First name -->
+                    <div class="md-form">
+                        {{ form.teacher }}
+                        <label for="materialRegisterFormFirstName">{{ form.teacher.label }}</label>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="md-form">
+                        {{ form.description }}
+                        <label for="materialRegisterFormLastName">{{ form.description.label }}</label>
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col">
+
+                    <div>
+                        <label for="materialRegisterFormFirstName"> {{ form.session.label }}</label><br>
+                    </div>
+                    <div class="md-form">
+                        {{ form.session }}
+                    </div>
+                </div>
+                <div class="col">
+                    <div>
+                        <label for="materialRegisterFormFirstName"> {{ form.semester.label }}</label><br>
+                    </div>
+                    <div class="md-form">
+                        {{ form.semester }}
+                    </div>
+                </div>
+                <div class="col">
+                    <div>
+                        <label for="materialRegisterFormFirstName"> {{ form.year.label }}</label><br>
+                    </div>
+                    <div class="md-form">
+                        {{ form.year }}
+                    </div>
+                </div>
+                    <div class="col">
+                    <div>
+                        <label for="materialRegisterFormFirstName"> {{ form.branch.label }}</label><br>
+                    </div>
+                    <div class="md-form">
+                        {{ form.branch }}
+                    </div>
+                        </div>
+                    <div class="col">
+                    <div>
+                        <label for="materialRegisterFormFirstName"> {{ form.day.label }}</label><br>
+                    </div>
+                    <div class="md-form">
+                        {{ form.day }}
+                    </div>
+                                   </div>
+                    <div class="col">
+                    <div>
+                        <label for="materialRegisterFormFirstName"> {{ form.number.label }}</label><br>
+                    </div>
+                    <div class="md-form">
+                        {{ form.number }}
+                    </div>
+                </div>
+            </div>
+          <input class="btn btn-primary" type="submit" value="Edit">
+        </form>
+    </div>
+</div>
+</div>
+{% endblock %}

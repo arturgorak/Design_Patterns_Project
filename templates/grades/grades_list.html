@@ -3,8 +3,10 @@
 {% block content %}
 {% block fullcard %}
     {% if request.user.is_teacher or request.user.is_superuser %}
+        {% if request.user.is_teacher %}
     <a href="{% url 'add_grade' %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">New grade(s)</a>
     <a href="{% url 'edit_grades' %}" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Edit grade(s)</a>
+        {% endif %}
     {% endif %}
   {% for key, result in results.items %}
     <div class="card">
@@ -28,8 +30,8 @@
             {% for subject in result.subjects %}
               <tr>
                 <td>{{ forloop.counter }}</td>
-                <td>{{ subject.subject.subjectName }}</td>
-                <td>{{ subject.subject.subjectCode}}</td>
+                <td>{{ subject.subjectName }}</td>
+                <td>{{ subject.subjectCode}}</td>
                 <td>{{ subject.grade }}</td>
                 <td>{{ subject.weight }}</td>
                 <td>{{ subject.teacher.user.get_full_name }}</td>

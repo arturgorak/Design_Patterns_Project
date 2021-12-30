@@ -96,12 +96,36 @@ class Class(models.Model):
         verbose_name_plural = 'Classes'
 
 
+DAY = (
+    ("Monday", "Monday"),
+    ("Tuesday", "Tuesday"),
+    ("Wednesday", "Wednesday"),
+    ("Thursday", "Thursday"),
+    ("Friday", "Friday")
+)
+
+NUMBER = (
+    ("0", 0),
+    ("1", 1),
+    ("2", 2),
+    ("3", 3),
+    ("4", 4),
+    ("5", 5),
+    ("6", 6),
+    ("7", 7),
+    ("8", 8),
+    ("9", 9),
+)
+
 
 class Subject(models.Model):
     subjectName = models.CharField(choices=SUBJECTS, max_length=200)
     subjectCode = models.CharField(max_length=200, unique=True)
     teacher = models.ForeignKey(Teacher, on_delete=models.SET_NULL, null=True)
     description = models.TextField(max_length=200, blank=True)
+    day = models.CharField(choices=DAY, max_length=200)
+    number = models.CharField(choices=NUMBER, max_length=200)
+    session = models.ForeignKey(Session, on_delete=models.SET_NULL, null=True)
     semester = models.CharField(choices=SEMESTER, max_length=200)
     branch = models.CharField(choices=BRANCH, max_length=1, blank=True, null=True)
     year = models.CharField(choices=YEAR, max_length=1, blank=True, null=True)

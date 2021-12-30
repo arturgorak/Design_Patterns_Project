@@ -116,7 +116,6 @@ class StudentAddForm(UserCreationForm):
         return user
 
 
-
 class EditStudent(forms.ModelForm):
     first_name = forms.CharField(
         widget=forms.TextInput(attrs={'class': 'form-control'}),
@@ -154,22 +153,8 @@ class EditStudent(forms.ModelForm):
         required=False)
 
     class Meta:
-        model = User
+        model = Student
         fields = ['first_name', 'last_name', 'email', 'phone', 'address', 'year', 'branch']
-
-    @transaction.atomic()
-    def save(self):
-        user = super().save(commit=False)
-        user.is_student = True
-        user.first_name = self.cleaned_data.get('firstname')
-        user.last_name = self.cleaned_data.get('lastname')
-        user.phone = self.cleaned_data.get('phone')
-        user.email = self.cleaned_data.get('email')
-        user.save()
-        student = Student.objects.create(user=user, id_number=user.username, year=self.cleaned_data.get('year'),
-                                         students_class=self.cleaned_data.get('branch'))
-        student.save()
-        return user
 
 
 class ProfileForm(forms.ModelForm):
@@ -249,3 +234,60 @@ class GradeAddForm(forms.Form):
 EditGrades = modelformset_factory(
     Grade, fields=("grade", "weight", "date", "comment"), extra=0, can_delete=True
 )
+
+
+class SubjectAddForm(forms.ModelForm):
+    subjectName = forms.CharField(
+        widget=forms.Select(choices=SUBJECTS, attrs={'class': 'browser-default custom-select', }),
+        label="",
+    )
+    subjectCode = forms.CharField(
+        max_length=30,
+        widget=forms.TextInput(attrs={'class': 'form-control',}),
+        label= "Subject's Code",
+    )
+    teacher = forms.ModelChoiceField(
+        queryset=Teacher.objects.all(),
+        widget=forms.Select(attrs={'class': 'browser-default custom-select'}),
+        label="Teacher",
+    )
+    description = forms.CharField(
+        max_length=30,
+        widget=forms.TextInput(attrs={'class': 'form-control', }),
+        label="Description",
+        required=False,
+    )
+    day = forms.CharField(
+        widget=forms.Select(choices=DAY, attrs={'class': 'browser-default custom-select', }),
+        label="Day",
+    )
+    number = forms.CharField(
+        max_length=10,
+        widget=forms.Select(choices=NUMBER, attrs={'class': 'form-control',}),
+        label="Hour",
+    )
+    session = forms.ModelChoiceField(
+        queryset=Session.objects.all(),
+        widget=forms.Select(attrs={'class': 'browser-default custom-select'}),
+        label="Session",
+    )
+    semester = forms.CharField(
+        max_length=30,
+        widget=forms.Select(choices=SEMESTER, attrs={'class': 'form-control', }),
+        label="Semester",
+    )
+    branch = forms.CharField(
+        max_length=30,
+        widget=forms.Select(choices=BRANCH, attrs={'class': 'form-control', }),
+        label="Class",
+    )
+    year = forms.CharField(
+        max_length=30,
+        widget=forms.Select(choices=YEAR, attrs={'class': 'form-control', }),
+        label="Year",
+    )
+
+    class Meta:
+        model = Subject
+        fields = ['subjectName', 'subjectCode', 'teacher', 'description', 'day', 'number', 'semester', 'branch', 'year', 'session']
+
