@@ -1,4 +1,3 @@
-from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.db import transaction
 from .models import *
@@ -24,12 +23,12 @@ class TeacherAddForm(UserCreationForm):
     )
     lastname = forms.CharField(
         max_length=30,
-        widget=forms.TextInput(attrs={'type': 'text','class': 'form-control', }),
+        widget=forms.TextInput(attrs={'type': 'text', 'class': 'form-control', }),
         label="Lastname",
     )
     email = forms.CharField(
         max_length=30,
-        widget=forms.TextInput(attrs={'type': 'text','class': 'form-control', }),
+        widget=forms.TextInput(attrs={'type': 'text', 'class': 'form-control', }),
         label="Email",
     )
 
@@ -56,34 +55,34 @@ class TeacherAddForm(UserCreationForm):
 class StudentAddForm(UserCreationForm):
     username = forms.CharField(
         max_length=30,
-        widget=forms.TextInput(attrs={'type': 'text','class': 'form-control', }),
+        widget=forms.TextInput(attrs={'type': 'text', 'class': 'form-control', }),
         label="Username",
     )
     address = forms.CharField(
         max_length=30,
-        widget=forms.TextInput(attrs={'type': 'text','class': 'form-control', }),
+        widget=forms.TextInput(attrs={'type': 'text', 'class': 'form-control', }),
         label="Address",
     )
     phone = forms.CharField(
         max_length=30,
-        widget=forms.TextInput(attrs={'type': 'text','class': 'form-control', }),
+        widget=forms.TextInput(attrs={'type': 'text', 'class': 'form-control', }),
         label="Phone number",
     )
 
     firstname = forms.CharField(
         max_length=30,
-        widget=forms.TextInput(attrs={'type': 'text','class': 'form-control', }),
+        widget=forms.TextInput(attrs={'type': 'text', 'class': 'form-control', }),
         label="Firstname",
     )
 
     lastname = forms.CharField(
         max_length=30,
-        widget=forms.TextInput(attrs={'type': 'text','class': 'form-control', }),
+        widget=forms.TextInput(attrs={'type': 'text', 'class': 'form-control', }),
         label="Lastname",
     )
 
     email = forms.EmailField(
-        widget=forms.TextInput(attrs={'type': 'email','class': 'form-control', }),
+        widget=forms.TextInput(attrs={'type': 'email', 'class': 'form-control', }),
         label="Email Address",
     )
 
@@ -93,7 +92,7 @@ class StudentAddForm(UserCreationForm):
     )
 
     branch = forms.CharField(
-        widget=forms.Select(choices=BRANCH,attrs={'class': 'browser-default custom-select', }),
+        widget=forms.Select(choices=BRANCH, attrs={'class': 'browser-default custom-select', }),
         label="Class",
     )
 
@@ -132,7 +131,7 @@ class EditStudent(forms.ModelForm):
         label="Year",
     )
     branch = forms.CharField(
-        widget=forms.Select(choices=BRANCH,attrs={'class': 'browser-default custom-select', }),
+        widget=forms.Select(choices=BRANCH, attrs={'class': 'browser-default custom-select', }),
         label="Class",
     )
     email = forms.EmailField(
@@ -191,36 +190,6 @@ class ProfileForm(forms.ModelForm):
                   'email', 'phone', 'address']
 
 
-class SessionForm(forms.ModelForm):
-    class Meta:
-        model = Session
-        fields = ['session']
-
-
-class SemesterForm(forms.ModelForm):
-    semester = forms.CharField(
-        widget=forms.Select(choices=SEMESTER,attrs={'class': 'browser-default custom-select', }),
-        label="semester",
-    )
-    is_current_semester = forms.CharField(
-        widget=forms.Select(choices=((True, 'Yes'), (False, 'No')), attrs={'class': 'browser-default custom-select',}),
-        label="is current semester ?",
-    )
-    session = forms.ModelChoiceField(
-        queryset=Session.objects.all(),
-        widget=forms.Select(attrs={'class': 'browser-default custom-select',}),
-        required=True
-    )
-
-    next_semester_begins = forms.DateTimeField(
-        widget=forms.TextInput(attrs={'type': 'date', }),
-        required=True)
-
-    class Meta:
-        model = Semester
-        fields = ['semester', 'is_current_semester', 'session', 'next_semester_begins']
-
-
 class GradeAddForm(forms.Form):
     subject = forms.ModelMultipleChoiceField(
         queryset=Subject.objects.all(), widget=forms.CheckboxSelectMultiple
@@ -243,8 +212,8 @@ class SubjectAddForm(forms.ModelForm):
     )
     subjectCode = forms.CharField(
         max_length=30,
-        widget=forms.TextInput(attrs={'class': 'form-control',}),
-        label= "Subject's Code",
+        widget=forms.TextInput(attrs={'class': 'form-control', }),
+        label="Subject's Code",
     )
     teacher = forms.ModelChoiceField(
         queryset=Teacher.objects.all(),
@@ -263,7 +232,7 @@ class SubjectAddForm(forms.ModelForm):
     )
     number = forms.CharField(
         max_length=10,
-        widget=forms.Select(choices=NUMBER, attrs={'class': 'form-control',}),
+        widget=forms.Select(choices=NUMBER, attrs={'class': 'form-control', }),
         label="Hour",
     )
     session = forms.ModelChoiceField(
@@ -286,8 +255,28 @@ class SubjectAddForm(forms.ModelForm):
         widget=forms.Select(choices=YEAR, attrs={'class': 'form-control', }),
         label="Year",
     )
+    classroom = forms.IntegerField(
+        widget=forms.TextInput(attrs={'class': 'form-control', }),
+        label="Classroom",
+    )
 
     class Meta:
         model = Subject
-        fields = ['subjectName', 'subjectCode', 'teacher', 'description', 'day', 'number', 'semester', 'branch', 'year', 'session']
+        fields = ['subjectName', 'subjectCode', 'teacher', 'description', 'day', 'number', 'semester', 'branch', 'year',
+                  'session', 'classroom']
 
+
+class SessionAddForm(forms.ModelForm):
+    is_current_session = forms.CharField(
+        widget=forms.Select(choices=((True, 'Yes'), (False, 'No')),attrs={'class': 'browser-default custom-select', }),
+        label="is current semester ?",
+    )
+    session = forms.CharField(
+        max_length=30,
+        widget=forms.TextInput(attrs={'class': 'form-control', }),
+        label="Session",
+    )
+
+    class Meta:
+        model = Session
+        fields = ['is_current_session', 'session']

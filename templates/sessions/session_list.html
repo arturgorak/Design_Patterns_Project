@@ -1,0 +1,45 @@
+{% extends 'Links.html' %}
+
+
+{% block content %}
+    <div class="container-fluid mt-5">
+        <!-- Heading -->
+        <!-- Heading -->
+
+        <!--Card content-->
+        <table class="table table-striped">
+            <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Session</th>
+                <th scope="col">Current Session</th>
+                <th scope="col">Action</th>
+            </tr>
+            </thead>
+            {% for session in sessions %}
+                <tbody>
+                <tr>
+                    <th scope="row">{{ forloop.counter }}</th>
+                    <td>{{ session.session }}</td>
+                    <td>
+                        {% if session.is_current_session %}
+                            <i class="fa fa-check"></i>
+                        {% else %}
+                            <i class="fa fa-times"> </i>
+                        {% endif %}
+
+                    <td>
+                        <a href="{% url 'session_edit' pk=session.pk %}" title="edit" class="teal-text"><i
+                                class="fa fa-pencil"></i></a>
+                        <a href="{% url 'session_delete' pk=session.pk %}" title="delete" class="red-text"><i
+                                class="fa fa-times"></i></a>
+                    </td>
+                </tr>
+                </tbody>
+            {% endfor %}
+        </table>
+    </div>
+    <h6 class="mb-2 mb-sm-0 pt-1"><a href="{% url 'session_add' %}" class="btn btn-default btn-rounded mb-4"> Add
+        Session </a></h6>
+
+{% endblock %}

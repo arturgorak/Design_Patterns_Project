@@ -1,4 +1,3 @@
-
 from django.contrib import admin
 from django.urls import path, include
 from django.contrib.auth import views
@@ -27,5 +26,9 @@ urlpatterns = [
     path("subject_list", subject_list, name="subject_list"),
     path("subject_delete/<int:pk>/", delete_subject, name="subject_delete"),
     path("subject_edit/<int:pk>/", edit_subject, name="subject_edit"),
+    path('session_add', session_add, name="session_add"),
+    path('session_list', session_list, name="session_list"),
+    path("session_edit/<int:pk>/", session_edit, name="session_edit"),
+    path("session_delete/<int:pk>/", delete_session, name="session_delete"),
 
 ]

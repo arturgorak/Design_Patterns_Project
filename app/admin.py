@@ -10,11 +10,9 @@ class AllocationAdmin(admin.ModelAdmin):
     list_display = ['teacher', ]
 
 
-class ResultAdmin(admin.ModelAdmin):
-    list_display = ['student', 'gpa', 'semester', 'year', 'cgpa']
 
 
-admin.site.register(Semester)
+
 admin.site.register(Student)
 admin.site.register(Session)
 admin.site.register(User)
@@ -23,4 +21,4 @@ admin.site.register(Grade)
 admin.site.register(Teacher)
 admin.site.register(Director)
 admin.site.register(Subject)
-admin.site.register(Result, ResultAdmin)
+

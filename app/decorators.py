@@ -49,7 +49,6 @@ def director_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, lo
 
 
 def login_required(func):
-
     def wrapped_func(request, *args, **kwargs):
         request = is_logged_in(request)
 

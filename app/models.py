@@ -24,7 +24,6 @@ class User(AbstractUser):
 class Session(models.Model):  # academic year
     session = models.CharField(max_length=200, unique=True)
     is_current_session = models.BooleanField(default=False, blank=True, null=True)
-    next_session_begins = models.DateField(blank=True, null=True)
 
     def __str__(self):
         return self.session
@@ -37,16 +36,6 @@ SEMESTER = (
     (FIRST, "First"),
     (SECOND, "Second"),
 )
-
-
-class Semester(models.Model):
-    semester = models.CharField(max_length=10, choices=SEMESTER, blank=True)
-    is_current_semester = models.BooleanField(default=False, blank=True, null=True)
-    session = models.ForeignKey(Session, on_delete=models.CASCADE, blank=True, null=True)
-    next_semester_begins = models.DateField(null=True, blank=True)
-
-    def __str__(self):
-        return self.semester
 
 
 YEAR = (
@@ -122,6 +111,7 @@ class Subject(models.Model):
     subjectName = models.CharField(choices=SUBJECTS, max_length=200)
     subjectCode = models.CharField(max_length=200, unique=True)
     teacher = models.ForeignKey(Teacher, on_delete=models.SET_NULL, null=True)
+    classroom = models.IntegerField(unique=False, null=True)
     description = models.TextField(max_length=200, blank=True)
     day = models.CharField(choices=DAY, max_length=200)
     number = models.CharField(choices=NUMBER, max_length=200)
@@ -196,11 +186,3 @@ class Grade(models.Model):
     weight = models.CharField(choices=WEIGHT, max_length=1, blank=True)
     comment = models.CharField(max_length=200, blank=True)
 
-
-class Result(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    gpa = models.FloatField(null=True)
-    cgpa = models.FloatField(null=True)
-    semester = models.CharField(max_length=100, choices=SEMESTER)
-    session = models.CharField(max_length=100, blank=True, null=True)
-    year = models.CharField(max_length=100, choices=YEAR)

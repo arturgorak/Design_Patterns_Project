@@ -1,52 +1,52 @@
 {% extends 'Links.html' %}
 
 {% block content %}
-{% block fullcard %}
-    {% if request.user.is_teacher or request.user.is_superuser %}
-        {% if request.user.is_teacher %}
-    <a href="{% url 'add_grade' %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">New grade(s)</a>
-    <a href="{% url 'edit_grades' %}" class="btn btn-secondary btn-lg active" role="button" aria-pressed="true">Edit grade(s)</a>
+    {% block fullcard %}
+        {% if request.user.is_teacher or request.user.is_superuser %}
+            {% if request.user.is_teacher %}
+                <a href="{% url 'add_grade' %}" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">New
+                    grade(s)</a>
+                <a href="{% url 'edit_grades' %}" class="btn btn-secondary btn-lg active" role="button"
+                   aria-pressed="true">Edit grade(s)</a>
+            {% endif %}
         {% endif %}
-    {% endif %}
-  {% for key, result in results.items %}
-    <div class="card">
-      <div class="card-header">
-        {{result.student.user.get_full_name}}
-      </div>
-      <div class="card-body">
-        <table class="table table-bordered table-sm">
-          <thead class="thead-light">
-            <tr>
-              <th></th>
-              <th>Subject</th>
-              <th>Subject's id</th>
-              <th>Grade</th>
-              <th>Weight</th>
-              <th>Teacher</th>
-              <th>Comment</th>
-            </tr>
-          </thead>
-          <tbody>
-            {% for subject in result.subjects %}
-              <tr>
-                <td>{{ forloop.counter }}</td>
-                <td>{{ subject.subjectName }}</td>
-                <td>{{ subject.subjectCode}}</td>
-                <td>{{ subject.grade }}</td>
-                <td>{{ subject.weight }}</td>
-                <td>{{ subject.teacher.user.get_full_name }}</td>
-                <td>{{ subject.comment }}</td>
-              </tr>
-            {% endfor %}
-          </tbody>
-        </table>
+        {% for key, result in results.items %}
+            <div class="card">
+                <div class="card-header">
+                    {{ result.student.user.get_full_name }}
+                </div>
+                <div class="card-body">
+                    <table class="table table-bordered table-sm">
+                        <thead class="thead-light">
+                        <tr>
+                            <th></th>
+                            <th>Subject</th>
+                            <th>Subject's id</th>
+                            <th>Grade</th>
+                            <th>Weight</th>
+                            <th>Teacher</th>
+                            <th>Comment</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for subject in result.subjects %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ subject.subjectName }}</td>
+                                <td>{{ subject.subjectCode }}</td>
+                                <td>{{ subject.grade }}</td>
+                                <td>{{ subject.weight }}</td>
+                                <td>{{ subject.teacher.user.get_full_name }}</td>
+                                <td>{{ subject.comment }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
 
 
+                </div>
+            </div>
+        {% endfor %}
 
-
-      </div>
-    </div>
-  {% endfor %}
-
-{% endblock fullcard %}
+    {% endblock fullcard %}
 {% endblock content %}

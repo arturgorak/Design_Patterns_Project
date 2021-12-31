@@ -35,7 +35,6 @@ def logoutPage(request):
 
 @login_required
 def home(request):
-
     context = {
         # "no_of_students": students,
         # "no_of_staff": staff,
@@ -51,7 +50,7 @@ def home(request):
 @login_required
 def student_list(request):
     if request.user.is_student:
-        students = Student.objects.filter(students_class=request.user.student.students_class)\
+        students = Student.objects.filter(students_class=request.user.student.students_class) \
             .filter(year=request.user.student.year)
     else:
         students = Student.objects.all()
@@ -123,7 +122,6 @@ def edit_student(request, pk):
 
 
 def teachers_subject(teacher):
-
     subjects = Subject.objects.all()
     sub_array = []
     for y in subjects:
@@ -176,7 +174,6 @@ def delete_teacher(request, pk):
 @director_required()
 def edit_teacher(request, pk):
     teacher = get_object_or_404(Teacher, pk=pk)
-    #teacher = Teacher.objects.get(pk=pk)
     if request.method == "POST":
         form = TeacherAddForm(request.POST, instance=teacher)
         if not form.is_valid():
@@ -191,22 +188,37 @@ def edit_teacher(request, pk):
             teacher.user.address = form.cleaned_data.get("address")
             teacher.user.phone = form.cleaned_data.get("phone")
             teacher.user.save()
-            #teacher.save()
             messages.success(request, "Successfully Updated")
             return redirect('teacher_list')
     else:
-        form = TeacherAddForm(instance=teacher)
+        form = TeacherAddForm(instance=teacher, initial={
+            'username': teacher.user.username,
+            'lastname': teacher.user.last_name,
+            'firstname': teacher.user.first_name,
+            'email': teacher.user.email,
+            'address': teacher.user.address,
+            'phone': teacher.user.phone,
+        })
     return render(request, 'teachers/edit_teacher2.html', {'form': form})
 
 
 @login_required
 def profile(request):
     if request.user.is_teacher:
-        subjects = teachers_subject(request.user.teacher)
+        subjects = Subject.objects.filter(teacher=request.user.teacher)
+        subjects_monday = sorted(subjects.filter(day="Monday"), key=lambda x: x.number, reverse=False)
+        subjects_tuesday = sorted(subjects.filter(day="Tuesday"), key=lambda x: x.number, reverse=False)
+        subjects_wednesday = sorted(subjects.filter(day="Wednesday"), key=lambda x: x.number, reverse=False)
+        subjects_thursday = sorted(subjects.filter(day="Thursday"), key=lambda x: x.number, reverse=False)
+        subjects_friday = sorted(subjects.filter(day="Friday"), key=lambda x: x.number, reverse=False)
         teacher_class = Class.objects.filter(supervising_teacher=request.user.teacher)
         class_count = len(teacher_class)
         context = {
-            'subjects': subjects,
+            'subjects_monday': subjects_monday,
+            'subjects_tuesday': subjects_tuesday,
+            'subjects_wednesday': subjects_wednesday,
+            'subjects_thursday': subjects_thursday,
+            'subjects_friday': subjects_friday,
             'class': teacher_class,
             'count': class_count
         }
@@ -214,13 +226,25 @@ def profile(request):
         return render(request, 'profile/profile.html', context)
     elif request.user.is_student:
         student = Student.objects.get(user__pk=request.user.id)
-        subjects = Subject.objects.filter(branch=request.user.student.students_class)\
+
+        subjects = Subject.objects.filter(branch=request.user.student.students_class).filter(
+            year=request.user.student.year)
+        subjects_monday = sorted(subjects.filter(day="Monday"), key=lambda x: x.number, reverse=False)
+        subjects_tuesday = sorted(subjects.filter(day="Tuesday"), key=lambda x: x.number, reverse=False)
+        subjects_wednesday = sorted(subjects.filter(day="Wednesday"), key=lambda x: x.number, reverse=False)
+        subjects_thursday = sorted(subjects.filter(day="Thursday"), key=lambda x: x.number, reverse=False)
+        subjects_friday = sorted(subjects.filter(day="Friday"), key=lambda x: x.number, reverse=False)
+
+        students_class = Class.objects.filter(branch=request.user.student.students_class) \
             .filter(year=request.user.student.year)
-        students_class = Class.objects.filter(branch=request.user.student.students_class)\
-            .filter(year=request.user.student.year)
+
         context = {
             'student': student,
-            'subjects': subjects,
+            'subjects_monday': subjects_monday,
+            'subjects_tuesday': subjects_tuesday,
+            'subjects_wednesday': subjects_wednesday,
+            'subjects_thursday': subjects_thursday,
+            'subjects_friday': subjects_friday,
             'class': students_class
         }
         return render(request, 'profile/profile.html', context)
@@ -320,7 +344,6 @@ def create_grade(request):
                                         student=stu,
                                         teacher=request.user.teacher,
 
-
                                     )
                                 )
 
@@ -335,7 +358,7 @@ def create_grade(request):
             studentlist = ",".join(id_list)
             context = {"students": studentlist, "form": form, "count": len(id_list)}
 
-            return render(request, "grades/create_grade_page2.html", context,)
+            return render(request, "grades/create_grade_page2.html", context, )
         else:
             messages.warning(request, "You didnt select any student.")
 
@@ -350,7 +373,6 @@ def create_grade(request):
 @login_required
 @teacher_required()
 def edit_grades(request):
-
     if request.method == "POST":
         form = EditGrades(request.POST)
         if form.is_valid():
@@ -416,6 +438,8 @@ def subject_list(request):
     return render(request, 'subjects/subject_list.html', context)
 
 
+@login_required
+@director_required
 def delete_subject(request, pk):
     subject = get_object_or_404(Subject, pk=pk)
     subject.delete()
@@ -423,11 +447,12 @@ def delete_subject(request, pk):
     return redirect('subject_list')
 
 
+@login_required
+@director_required
 def edit_subject(request, pk):
     subject = get_object_or_404(Subject, pk=pk)
     if request.method == "POST":
         form = SubjectAddForm(request.POST, instance=subject)
-        print(form.errors)
         if form.is_valid():
             subject.subjectCode = form.cleaned_data.get("subjectCode")
             subject.subjectName = form.cleaned_data.get("subjectName")
@@ -439,6 +464,7 @@ def edit_subject(request, pk):
             subject.branch = form.cleaned_data.get("branch")
             subject.day = form.cleaned_data.get("day")
             subject.number = form.cleaned_data.get("number")
+            subject.classroom = form.cleaned_data.get("classroom")
             subject.save()
             messages.success(request, "Successfully Updated")
             return redirect('subject_list')
@@ -454,7 +480,68 @@ def edit_subject(request, pk):
             'year': subject.year,
             'branch': subject.branch,
             'day': subject.day,
-            'number': subject.number
+            'number': subject.number,
+            'classroom': subject.classroom
 
         })
     return render(request, 'subjects/subject_edit.html', {'form': form})
+
+
+@login_required
+@director_required
+def session_add(request):
+    if request.method == 'POST':
+        form = SessionAddForm(request.POST)
+        if form.is_valid():
+            if form.cleaned_data.get("is_current_session") and len(
+                    Session.objects.filter(is_current_session=True)) == 1:
+                unset = Session.objects.filter(is_current_session=True).first()
+                unset.is_current_session = False
+                unset.save()
+
+            form.save()
+            messages.success(request, 'Session added successfully ! ')
+        return redirect("session_list")
+    else:
+        form = SessionAddForm()
+    return render(request, 'sessions/session_add.html', {'form': form})
+
+
+@login_required
+@director_required
+def session_list(request):
+    sessions = Session.objects.all().order_by('-session')
+    return render(request, 'sessions/session_list.html', {"sessions": sessions, })
+
+
+@login_required
+@director_required
+def session_edit(request, pk):
+    session = Session.objects.get(pk=pk)
+    if request.method == 'POST':
+        form = SessionAddForm(request.POST, instance=session)
+        if form.is_valid():
+            if form.cleaned_data.get("is_current_session") and len(
+                    Session.objects.filter(is_current_session=True)) == 1:
+                unset = Session.objects.filter(is_current_session=True).first()
+                unset.is_current_session = False
+                unset.save()
+            form.save()
+            messages.success(request, 'Session updated successfully ! ')
+        return redirect('session_list')
+    else:
+        form = SessionAddForm(instance=session, initial={
+            'is_current_session': session.is_current_session,
+            'session': session.session,
+        })
+
+    return render(request, 'sessions/session_edit.html', {'form': form})
+
+
+@login_required
+@director_required
+def delete_session(request, pk):
+    session = get_object_or_404(Session, pk=pk)
+    session.delete()
+    messages.success(request, "Successfully deleted")
+    return redirect('session_list')

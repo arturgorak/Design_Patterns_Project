@@ -2,38 +2,38 @@
 
 {% block content %}
     {% block content-header %}
-  <form method="POST">
-    {% csrf_token %}
-{% endblock content-header %}
+        <form method="POST">
+        {% csrf_token %}
+    {% endblock content-header %}
 
 
-    {% block title %}
-        Select Student(s) <span class="small">and then click on proceed</span>
-    {% endblock title %}
+{% block title %}
+    Select Student(s) <span class="small">and then click on proceed</span>
+{% endblock title %}
 
-  <table id="studenttable" class="table table-sm table-bordered" data-page-length='100'>
+<table id="studenttable" class="table table-sm table-bordered" data-page-length='100'>
     <thead class="thead-light">
-      <tr>
+    <tr>
         <th>Surname</th>
         <th>Name</th>
         <th>Current Class</th>
         <th><input type="checkbox" id="selecter"></th>
-      </tr>
+    </tr>
     </thead>
     <tbody>
-      {% for student in students %}
+    {% for student in students %}
         <tr>
 
-          <td>{{student.user.last_name}} </td>
-          <td>{{student.user.first_name}} </td>
-          <td>{{student.year}}{{ student.students_class }}</td>
-          <td><input type="checkbox" id="{{ student.id }}" name="students" value="{{ student.id}}"></td>
+            <td>{{ student.user.last_name }} </td>
+            <td>{{ student.user.first_name }} </td>
+            <td>{{ student.year }}{{ student.students_class }}</td>
+            <td><input type="checkbox" id="{{ student.id }}" name="students" value="{{ student.id }}"></td>
         </tr>
-      {% endfor %}
+    {% endfor %}
     </tbody>
-  </table>
+</table>
 
-  <input type="submit" class="btn btn-success mt-2" value="Proceed >">
+<input type="submit" class="btn btn-success mt-2" value="Proceed >">
 
 
 </form>
@@ -41,19 +41,18 @@
 
 
 {% block morejs %}
-<script>
-  $('#studenttable').DataTable({
-    "ordering": false
-  });
+    <script>
+        $('#studenttable').DataTable({
+            "ordering": false
+        });
 
-  $("#selecter").change(function () {
-    if (this.checked) {
-      $('input[name="students"]').prop('checked', true);
-    }
-    else {
-      $('input[name="students"]').prop('checked', false);
-    }
-  });
-</script>
+        $("#selecter").change(function () {
+            if (this.checked) {
+                $('input[name="students"]').prop('checked', true);
+            } else {
+                $('input[name="students"]').prop('checked', false);
+            }
+        });
+    </script>
 
 {% endblock morejs %}

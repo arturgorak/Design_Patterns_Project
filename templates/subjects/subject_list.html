@@ -4,53 +4,57 @@
 
 {% block content %}
 
-<div class="container ">
+    <div class="container ">
 
-    <br><br>
-<div class="row">
-    <div class="col-md-9">
-        <h5>Subjects:</h5>
-        <div class="card card-body">
-            <table class="table table-sm">
-                <tr>
-                    <th>#</th>
-                    <th>Name</th>
-                    <th>Code</th>
-                    <th>Teacher</th>
-                    <th>Class</th>
-                    <th>Day</th>
-                    <th>Hour</th>
-                    {% if request.user.is_superuser or request.user.is_director %}
-                     <th>Action</th>
-                    {% endif %}
-                </tr>
-                {% for s in subjects %}
-                <tr>
-                    <td>{{ forloop.counter }} </td>
-                    <td>{{s.subjectName}} </td>
-                    <td>{{s.subjectCode}} </td>
-                    <td>{{s.teacher.user.get_full_name}} </td>
-                    <td>{{s.year}}{{s.branch}} </td>
-                    <td>{{s.day}} </td>
-                    <td>{{s.number}} </td>
-                    {% if request.user.is_superuser or request.user.is_director %}
-                    <td>
+        <br><br>
+        <div class="row">
+            <div class="col-md-9">
+                <h5>Subjects:</h5>
+                <div class="card card-body">
+                    <table class="table table-sm">
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Code</th>
+                            <th>Teacher</th>
+                            <th>Class</th>
+                            <th>Day</th>
+                            <th>Hour</th>
+                            <th>Classroom</th>
+                            {% if request.user.is_superuser or request.user.is_director %}
+                                <th>Action</th>
+                            {% endif %}
+                        </tr>
+                        {% for s in subjects %}
+                            <tr>
+                                <td>{{ forloop.counter }} </td>
+                                <td>{{ s.subjectName }} </td>
+                                <td>{{ s.subjectCode }} </td>
+                                <td>{{ s.teacher.user.get_full_name }} </td>
+                                <td>{{ s.year }}{{ s.branch }} </td>
+                                <td>{{ s.day }} </td>
+                                <td>{{ s.number }} </td>
+                                <td>{{ s.classroom }} </td>
+                                {% if request.user.is_superuser or request.user.is_director %}
+                                    <td>
 
-                        <a data-toggle="tooltip" title="Edit" href="{% url 'subject_edit' pk=s.pk %}" class="blue-text"><i class="fa fa-pencil"></i></a>
-                        <a data-toggle="tooltip" href="{% url 'subject_delete' pk=s.id %}" title="delete" class="red-text"><i class="fa fa-times"></i></a>
-                    </td>
-                    {% endif %}
-                </tr>
-                {% endfor %}
-            </table>
+                                        <a data-toggle="tooltip" title="Edit" href="{% url 'subject_edit' pk=s.pk %}"
+                                           class="blue-text"><i class="fa fa-pencil"></i></a>
+                                        <a data-toggle="tooltip" href="{% url 'subject_delete' pk=s.id %}"
+                                           title="delete" class="red-text"><i class="fa fa-times"></i></a>
+                                    </td>
+                                {% endif %}
+                            </tr>
+                        {% endfor %}
+                    </table>
 
+                </div>
+                {% if request.user.is_superuser or request.user.is_director %}
+                    <a class="btn btn-default btn-rounded mb-4" href="{% url 'subject_add' %}" role="button">Add subject</a>
+                {% endif %}
+            </div>
         </div>
-    {% if request.user.is_superuser or request.user.is_director %}
-    <a class="btn btn-primary" href="{% url 'subject_add' %}" role="button">Add subject</a>
-    {% endif %}
-    </div>
-</div>
 
-<br><br>
-</div>
+        <br><br>
+    </div>
 {% endblock %}
