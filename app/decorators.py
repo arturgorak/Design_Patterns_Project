@@ -4,10 +4,6 @@ from .utils import is_logged_in
 
 
 def student_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url='login'):
-    '''
-    Decorator for views that checks that the logged in user is a student,
-    redirects to the log-in page if necessary.
-    '''
     actual_decorator = user_passes_test(
         lambda u: u.is_student or u.is_superuser,
         login_url=login_url,
@@ -19,10 +15,6 @@ def student_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, log
 
 
 def teacher_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url='login'):
-    '''
-    Decorator for views that checks that the logged in user is a teacher,
-    redirects to the log-in page if necessary.
-    '''
     actual_decorator = user_passes_test(
         lambda u: u.is_teacher or u.is_superuser,
         login_url=login_url,
@@ -34,10 +26,6 @@ def teacher_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, log
 
 
 def director_required(function=None, redirect_field_name=REDIRECT_FIELD_NAME, login_url='login'):
-    '''
-    Decorator for views that checks that the logged in user is a director,
-    redirects to the log-in page if necessary.
-    '''
     actual_decorator = user_passes_test(
         lambda u: u.is_director or u.is_superuser,
         login_url=login_url,

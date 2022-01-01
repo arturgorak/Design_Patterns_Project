@@ -1,3 +1,4 @@
+# from abc import abstractmethod
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
@@ -21,12 +22,53 @@ class User(AbstractUser):
         return full_name
 
 
+# class Observer:
+#     def __init__(self, subject):
+#         self._subject = subject
+#         self._observer_state = None
+#
+#     @abstractmethod
+#     def update(self, arg):
+#         pass
+#
+#
+# class ConcreteObserver(Observer):
+#     def __init__(self, subject):
+#         super().__init__(subject)
+#
+#     def update(self, arg):
+#         self._observer_state = arg
+#         if arg and len(Session.objects.filter(is_current_session=True)) > 1:
+#             for unset in Session.objects.filter(is_current_session=True):
+#                 if unset != self._subject:
+#                     unset.is_current_session = False
+#                     unset.save()
+
+
 class Session(models.Model):  # academic year
     session = models.CharField(max_length=200, unique=True)
     is_current_session = models.BooleanField(default=False, blank=True, null=True)
 
+    # _observers = []
+
     def __str__(self):
         return self.session
+
+    # def register(self, observer):
+    #     observer._subject = self
+    #     self._observers.append(observer)
+    #
+    # def deregister(self, observer):
+    #     observer._subject = None
+    #     self._observers.remove(observer)
+    #
+    # def notify(self):
+    #     for observer in self._observers:
+    #         if observer._subject == self:
+    #             observer.update(self.is_current_session)
+    #
+    # def count_observers(self):
+    #     print("Observers: " + str(len(self._observers)))
 
 
 FIRST = "First"
@@ -36,7 +78,6 @@ SEMESTER = (
     (FIRST, "First"),
     (SECOND, "Second"),
 )
-
 
 YEAR = (
     ("1", 1),
@@ -185,4 +226,3 @@ class Grade(models.Model):
     grade = models.CharField(choices=GRADE, max_length=1, blank=True)
     weight = models.CharField(choices=WEIGHT, max_length=1, blank=True)
     comment = models.CharField(max_length=200, blank=True)
-

@@ -91,7 +91,6 @@ def edit_student(request, pk):
     student = get_object_or_404(Student, pk=pk)
     if request.method == "POST":
         form = StudentAddForm(request.POST, instance=student)
-        print(form.errors)
         if form.is_valid():
             student.user.password1 = form.cleaned_data.get("password1")
             student.user.password2 = form.cleaned_data.get("password2")
@@ -176,8 +175,6 @@ def edit_teacher(request, pk):
     teacher = get_object_or_404(Teacher, pk=pk)
     if request.method == "POST":
         form = TeacherAddForm(request.POST, instance=teacher)
-        if not form.is_valid():
-            print(form.errors)
         if form.is_valid():
             teacher.user.password1 = form.cleaned_data.get("password1")
             teacher.user.password2 = form.cleaned_data.get("password2")
@@ -202,55 +199,78 @@ def edit_teacher(request, pk):
     return render(request, 'teachers/edit_teacher2.html', {'form': form})
 
 
+class Person:
+    def subjects(self): pass
+
+    def subjects_monday(self): pass
+
+    def subjects_tuesday(self): pass
+
+    def subjects_wednesday(self): pass
+
+    def subjects_thursday(self): pass
+
+    def subjects_friday(self): pass
+
+    def supervising(self): pass
+
+    def full_name(self): pass
+
+    def is_from_school(self): pass
+
+
+# The Adapter
+class Adapter(Person):
+    __person = None
+
+    def __init__(self, persona):
+        self.__person = persona
+
+    def subjects(self):
+        if self.__person.is_teacher:
+            return Subject.objects.filter(teacher=self.__person.teacher)
+        elif self.__person.is_student:
+            return Subject.objects.filter(branch=self.__person.student.students_class).filter(
+                year=self.__person.student.year)
+        else:
+            return User.objects.filter(is_teacher=True)
+
+    def subjects_monday(self):
+        return self.subjects().filter(day="Monday").order_by("number")
+
+    def subjects_tuesday(self):
+        return self.subjects().filter(day="Tuesday").order_by("number")
+
+    def subjects_wednesday(self):
+        return self.subjects().filter(day="Wednesday").order_by("number")
+
+    def subjects_thursday(self):
+        return self.subjects().filter(day="Thursday").order_by("number")
+
+    def subjects_friday(self):
+        return self.subjects().filter(day="Friday").order_by("number")
+
+    def supervising(self):
+        if self.__person.is_student:
+            return Class.objects.filter(branch=self.__person.student.students_class).filter(
+                year=self.__person.student.year)
+        else:
+            return Class.objects.filter(supervising_teacher=self.__person.teacher)
+
+    def full_name(self):
+        full_name = self.__person.username
+        if self.__person.first_name and self.__person.last_name:
+            full_name = self.__person.first_name + " " + self.__person.last_name
+        return full_name
+
+    def is_from_school(self):
+        return self.__person.is_teacher or self.__person.is_student
+
+
 @login_required
 def profile(request):
-    if request.user.is_teacher:
-        subjects = Subject.objects.filter(teacher=request.user.teacher)
-        subjects_monday = sorted(subjects.filter(day="Monday"), key=lambda x: x.number, reverse=False)
-        subjects_tuesday = sorted(subjects.filter(day="Tuesday"), key=lambda x: x.number, reverse=False)
-        subjects_wednesday = sorted(subjects.filter(day="Wednesday"), key=lambda x: x.number, reverse=False)
-        subjects_thursday = sorted(subjects.filter(day="Thursday"), key=lambda x: x.number, reverse=False)
-        subjects_friday = sorted(subjects.filter(day="Friday"), key=lambda x: x.number, reverse=False)
-        teacher_class = Class.objects.filter(supervising_teacher=request.user.teacher)
-        class_count = len(teacher_class)
-        context = {
-            'subjects_monday': subjects_monday,
-            'subjects_tuesday': subjects_tuesday,
-            'subjects_wednesday': subjects_wednesday,
-            'subjects_thursday': subjects_thursday,
-            'subjects_friday': subjects_friday,
-            'class': teacher_class,
-            'count': class_count
-        }
-
-        return render(request, 'profile/profile.html', context)
-    elif request.user.is_student:
-        student = Student.objects.get(user__pk=request.user.id)
-
-        subjects = Subject.objects.filter(branch=request.user.student.students_class).filter(
-            year=request.user.student.year)
-        subjects_monday = sorted(subjects.filter(day="Monday"), key=lambda x: x.number, reverse=False)
-        subjects_tuesday = sorted(subjects.filter(day="Tuesday"), key=lambda x: x.number, reverse=False)
-        subjects_wednesday = sorted(subjects.filter(day="Wednesday"), key=lambda x: x.number, reverse=False)
-        subjects_thursday = sorted(subjects.filter(day="Thursday"), key=lambda x: x.number, reverse=False)
-        subjects_friday = sorted(subjects.filter(day="Friday"), key=lambda x: x.number, reverse=False)
-
-        students_class = Class.objects.filter(branch=request.user.student.students_class) \
-            .filter(year=request.user.student.year)
-
-        context = {
-            'student': student,
-            'subjects_monday': subjects_monday,
-            'subjects_tuesday': subjects_tuesday,
-            'subjects_wednesday': subjects_wednesday,
-            'subjects_thursday': subjects_thursday,
-            'subjects_friday': subjects_friday,
-            'class': students_class
-        }
-        return render(request, 'profile/profile.html', context)
-    else:
-        staff = User.objects.filter(is_teacher=True)
-        return render(request, 'profile/profile.html', {"staff": staff})
+    person = Adapter(request.user)
+    return render(request, 'profile/profile2.html', {'person': person})
 
 
 @login_required
@@ -493,13 +513,19 @@ def session_add(request):
     if request.method == 'POST':
         form = SessionAddForm(request.POST)
         if form.is_valid():
-            if form.cleaned_data.get("is_current_session") and len(
-                    Session.objects.filter(is_current_session=True)) == 1:
-                unset = Session.objects.filter(is_current_session=True).first()
-                unset.is_current_session = False
-                unset.save()
+            # if form.cleaned_data.get("is_current_session") and len(
+            #         Session.objects.filter(is_current_session=True)) == 1:
+            #     unset = Session.objects.filter(is_current_session=True).first()
+            #     unset.is_current_session = False
+            #     unset.save()
 
             form.save()
+            # new_session = Session.objects.filter(session=form.cleaned_data.get("session")).first()
+            # obs = ConcreteObserver(new_session)
+            # new_session.register(obs)
+            # new_session.count_observers()
+            # new_session.notify()
+
             messages.success(request, 'Session added successfully ! ')
         return redirect("session_list")
     else:
@@ -521,12 +547,17 @@ def session_edit(request, pk):
     if request.method == 'POST':
         form = SessionAddForm(request.POST, instance=session)
         if form.is_valid():
-            if form.cleaned_data.get("is_current_session") and len(
-                    Session.objects.filter(is_current_session=True)) == 1:
-                unset = Session.objects.filter(is_current_session=True).first()
-                unset.is_current_session = False
-                unset.save()
+            # if form.cleaned_data.get("is_current_session") and len(
+            #         Session.objects.filter(is_current_session=True)) == 1:
+            #     unset = Session.objects.filter(is_current_session=True).first()
+            #     unset.is_current_session = False
+            #     unset.save()
             form.save()
+
+            # edited_session = Session.objects.filter(session=form.cleaned_data.get("session")).first()
+            # edited_session.count_observers()
+            # edited_session.notify()
+
             messages.success(request, 'Session updated successfully ! ')
         return redirect('session_list')
     else:

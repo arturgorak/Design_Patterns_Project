@@ -43,3 +43,10 @@ W aplikacji są 4 rodzaje użytowników:
   * Uczeń nr 7
     * login: student7
     * password: designpatterns123 
+
+Design Patterns:
+ - MVT
+ - Singleton
+ - Decorator
+ - Adapter
+ - Observer ???

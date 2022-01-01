@@ -10,9 +10,6 @@ class AllocationAdmin(admin.ModelAdmin):
     list_display = ['teacher', ]
 
 
-
-
-
 admin.site.register(Student)
 admin.site.register(Session)
 admin.site.register(User)

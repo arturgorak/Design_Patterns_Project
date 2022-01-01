@@ -1,0 +1,278 @@
+{% extends 'Links.html' %}
+{% load static %}
+{% load humanize %}
+
+{% block content %}
+    <style>
+        .table-wrapper-scroll-y {
+            display: block;
+            max-height: 350px;
+            overflow-y: auto;
+            -ms-overflow-style: -ms-autohiding-scrollbar;
+        }
+    </style>
+    <div class="container-fluid mt-5">
+
+        <!-- Heading -->
+
+        <div class="row">
+            <div class="col-md-3">
+
+                <!-- Card -->
+                <div class="card">
+
+                    <!-- Card image -->
+                    <div class="view overlay">
+                        <a class="mask" href="#">
+                            <div class="mask white-text">{{ person.full_name|capfirst }}</div>
+                        </a>
+                    </div>
+
+                    {% if user.is_teacher %}
+                        <!-- Card content -->
+                        <div class="card-body card-body-cascade text-center">
+
+                            <small class="card-title"><b>Name: </b>{{ person.full_name }}</small><br>
+                            <small class="card-title">Role: Teacher </small><br>
+                            {% if request.user.is_director %}
+                                <small class="card-title">Second role: Director </small><br>
+                            {% endif %}
+                            {% if count != 0 %}
+                                <small class="card-title">Raised Class:
+                                    {{ person.supervising.0.year }}{{ person.supervising.0.branch }} </small>
+                                <br>
+                            {% endif %}
+                            <a href="{% url 'edit_profile' %}" type="button" class="btn btn-outline-primary">Edit
+                                profile</a>
+                            <a href="{% url 'change_password' %}" type="button" class="btn btn-outline-primary">Change
+                                password</a>
+
+                        </div>
+                    {% endif %}
+
+                    {% if user.is_student %}
+                        <!-- Card content -->
+                        <div class="card-body card-body-cascade text-center">
+
+                            <small class="card-title">Name: {{ user.first_name }}</small><br>
+                            <small class="card-title">Surname: {{ user.last_name }}</small><br>
+                            <small class="card-title">Role: Student</small><br>
+                            <small class="card-title">Class:
+                                {{ user.student.year }}{{ user.student.students_class }}</small><br>
+                            <small class="card-title">Supervising
+                                teacher: {{ person.supervising.0.supervising_teacher.user.get_full_name }}</small><br>
+                            <a href="{% url 'edit_profile' %}" type="button" class="btn btn-outline-primary">Edit
+                                profile</a>
+                            <a href="{% url 'change_password' %}" type="button" class="btn btn-outline-primary">Change
+                                password</a>
+
+                        </div>
+
+                    {% endif %}
+
+
+                    {% if user.is_superuser %}
+                        <!-- Card content -->
+                        <div class="card-body card-body-cascade text-center">
+
+                            <small>Name: {{ person.full_name }}</small><br>
+                            <small>Role: Superuser</small><br>
+                            <a href="{% url 'edit_profile' %}" type="button" class="btn btn-outline-primary">Edit
+                                profile</a>
+                            <a href="{% url 'change_password' %}" type="button" class="btn btn-outline-primary">Change
+                                password</a>
+                        </div>
+                    {% endif %}
+
+
+                </div>
+                <!-- Card -->
+            </div>
+            {% if person.is_from_school%}
+                <div class="col-md-7 text-center">
+                    <p>Your subjects</p>
+
+
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">Lesson's number</th>
+                            <th scope="col">Subject Name</th>
+                            <th scope="col">Subject ID</th>
+                            {% if request.user.is_teacher %}
+                                <th scope="col">Class</th>
+                            {% elif request.user.is_student %}
+                                <th scope="col">Teacher</th>
+                            {% endif %}
+                            <th scope="col">Classroom</th>
+                            <th scope="col">Description</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td style="text-align: center" colspan="6">&nbsp; MONDAY</td>
+                        </tr>
+                        {% for subject in person.subjects_monday %}
+                            <tr>
+                                <td>{{ subject.number }}</td>
+                                <td>{{ subject.subjectName }}</td>
+                                <td>{{ subject.subjectCode }}</td>
+                                {% if request.user.is_teacher %}
+                                    <td>{{ subject.year }}{{ subject.branch }}</td>
+                                {% elif request.user.is_student %}
+                                    <td> {{ subject.teacher.user.get_full_name }}</td>
+                                {% endif %}
+                                <td>{{ subject.classroom }}</td>
+                                <td>{{ subject.description }}</td>
+
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td style="text-align: center" colspan="6">&nbsp; TUESDAY</td>
+                        </tr>
+                        {% for subject in person.subjects_tuesday %}
+                            <tr>
+                                <td>{{ subject.number }}</td>
+                                <td>{{ subject.subjectName }}</td>
+                                <td>{{ subject.subjectCode }}</td>
+                                {% if request.user.is_teacher %}
+                                    <td>{{ subject.year }}{{ subject.branch }}</td>
+                                {% elif request.user.is_student %}
+                                    <td> {{ subject.teacher.user.get_full_name }}</td>
+                                {% endif %}
+                                <td>{{ subject.classroom }}</td>
+                                <td>{{ subject.description }}</td>
+
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td style="text-align: center" colspan="6">&nbsp; WEDNESDAY</td>
+                        </tr>
+                        {% for subject in person.subjects_wednesday %}
+                            <tr>
+                                <td>{{ subject.number }}</td>
+                                <td>{{ subject.subjectName }}</td>
+                                <td>{{ subject.subjectCode }}</td>
+                                {% if request.user.is_teacher %}
+                                    <td>{{ subject.year }}{{ subject.branch }}</td>
+                                {% elif request.user.is_student %}
+                                    <td> {{ subject.teacher.user.get_full_name }}</td>
+                                {% endif %}
+                                <td>{{ subject.classroom }}</td>
+                                <td>{{ subject.description }}</td>
+
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td style="text-align: center" colspan="6">&nbsp; THURSDAY</td>
+                        </tr>
+                        {% for subject in person.subjects_thursday %}
+                            <tr>
+                                <td>{{ subject.number }}</td>
+                                <td>{{ subject.subjectName }}</td>
+                                <td>{{ subject.subjectCode }}</td>
+                                {% if request.user.is_teacher %}
+                                    <td>{{ subject.year }}{{ subject.branch }}</td>
+                                {% elif request.user.is_student %}
+                                    <td> {{ subject.teacher.user.get_full_name }}</td>
+                                {% endif %}
+                                <td>{{ subject.classroom }}</td>
+                                <td>{{ subject.description }}</td>
+
+                            </tr>
+                        {% endfor %}
+                        <tr>
+                            <td style="text-align: center" colspan="6">&nbsp; FRIDAY</td>
+                        </tr>
+                        {% for subject in person.subjects_friday %}
+                            <tr>
+                                <td>{{ subject.number }}</td>
+                                <td>{{ subject.subjectName }}</td>
+                                <td>{{ subject.subjectCode }}</td>
+                                {% if request.user.is_teacher %}
+                                    <td>{{ subject.year }}{{ subject.branch }}</td>
+                                {% elif request.user.is_student %}
+                                    <td> {{ subject.teacher.user.get_full_name }}</td>
+                                {% endif %}
+                                <td>{{ subject.classroom }}</td>
+                                <td>{{ subject.description }}</td>
+
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+
+                </div>
+            {% endif %}
+            {% if user.is_superuser %}
+                <div class="col-md-7 text-center">
+                    <p>All staff list</p>
+                    <div class="table-wrapper-scroll-y">
+
+                        <table class="table table-bordered table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Firstname</th>
+                                <th scope="col">Lastname</th>
+                                <th scope="col">Address</th>
+                                <th scope="col">Phone</th>
+                                <th scope="col">E-mail</th>
+
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for staff in person.subjects %}
+                                <tr>
+                                    <th scope="row">{{ forloop.counter }}</th>
+                                    <td>{{ staff.first_name }}</td>
+                                    <td>{{ staff.last_name }}</td>
+                                    <td>{{ staff.address }}</td>
+                                    <td>{{ staff.phone }}</td>
+                                    <td>{{ staff.email }}</td>
+
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td></td>
+                                    <td></td>
+                                    <td>No Staff to show !</td>
+                                    <td></td>
+                                </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            {% endif %}
+
+
+            <div class="col-md-2 text-center">
+                <small> Registered:<br>
+                    {{ user.date_joined|naturaltime }}
+                </small>
+                <hr/>
+                <small> Last Login:<br>
+
+                    {% if user.last_login == None %}
+                        Never
+                    {% else %}
+                        {{ user.last_login|naturaltime }}
+                    {% endif %}
+                </small>
+                <hr/>
+                <small> Phone:<br>
+                    {% if user.phone %}{{ user.phone }}{% endif %}
+                </small>
+                <hr/>
+                <small> Email:<br>
+                    {{ user.email }}
+                </small>
+                <hr/>
+                <small> Address:<br>
+                    {{ user.address }}
+                </small>
+            </div>
+        </div>
+    </div>
+{% endblock %}
