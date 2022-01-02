@@ -32,8 +32,8 @@
                         {% for subject in result.subjects %}
                             <tr>
                                 <td>{{ forloop.counter }}</td>
-                                <td>{{ subject.subjectName }}</td>
-                                <td>{{ subject.subjectCode }}</td>
+                                <td>{{ subject.subject.subjectName }}</td>
+                                <td>{{ subject.subject.subjectCode }}</td>
                                 <td>{{ subject.grade }}</td>
                                 <td>{{ subject.weight }}</td>
                                 <td>{{ subject.teacher.user.get_full_name }}</td>

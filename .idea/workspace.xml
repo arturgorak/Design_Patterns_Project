@@ -1,15 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="314ac281-c88d-4453-92cc-54113c898e99" name="Changes" comment="Sessions">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/admin.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/admin.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/decorators.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/decorators.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
-    </list>
+    <list default="true" id="314ac281-c88d-4453-92cc-54113c898e99" name="Changes" comment="Adapter" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -42,16 +34,16 @@
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/templates/profile" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/app" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
   </component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app" />
       <recent name="$PROJECT_DIR$/templates/profile" />
       <recent name="$PROJECT_DIR$/templates/sessions" />
       <recent name="$PROJECT_DIR$/templates/sessons" />
       <recent name="$PROJECT_DIR$/templates/subjects" />
-      <recent name="$PROJECT_DIR$/app/pictures" />
     </key>
   </component>
   <component name="RunManager">
@@ -99,6 +91,7 @@
       <workItem from="1640827163176" duration="81000" />
       <workItem from="1640872168073" duration="25979000" />
       <workItem from="1640956571562" duration="21209000" />
+      <workItem from="1640986958201" duration="4402000" />
     </task>
     <task id="LOCAL-00001" summary="Grades update">
       <created>1640727878792</created>
@@ -142,7 +135,14 @@
       <option name="project" value="LOCAL" />
       <updated>1640911323838</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Adapter">
+      <created>1640996253866</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1640996253866</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -166,6 +166,7 @@
     <MESSAGE value="Change password" />
     <MESSAGE value="Subjects" />
     <MESSAGE value="Sessions" />
-    <option name="LAST_COMMIT_MESSAGE" value="Sessions" />
+    <MESSAGE value="Adapter" />
+    <option name="LAST_COMMIT_MESSAGE" value="Adapter" />
   </component>
 </project>

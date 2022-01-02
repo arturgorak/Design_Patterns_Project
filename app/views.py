@@ -36,12 +36,6 @@ def logoutPage(request):
 @login_required
 def home(request):
     context = {
-        # "no_of_students": students,
-        # "no_of_staff": staff,
-        # "no_of_courses": courses,
-        # "no_of_1st_class_students": no_of_1st_class_students,
-        # "no_of_students_to_repeat": no_of_students_to_repeat,
-        # "no_of_carry_over_students": no_of_carry_over_students,
     }
 
     return render(request, 'home.html', context)
