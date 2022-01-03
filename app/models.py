@@ -21,6 +21,9 @@ class User(AbstractUser):
             full_name = self.last_name + " " + self.first_name
         return full_name
 
+    def __str__(self):
+        return self.get_full_name()
+
 
 # class Observer:
 #     def __init__(self, subject):
@@ -115,6 +118,9 @@ SUBJECTS = (
 class Teacher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
+    def __str__(self):
+        return self.user.get_full_name()
+
 
 class Class(models.Model):
     year = models.CharField(choices=YEAR, max_length=1, blank=True)
@@ -124,6 +130,9 @@ class Class(models.Model):
 
     class Meta:
         verbose_name_plural = 'Classes'
+
+    def __str__(self):
+        return self.year + self.branch
 
 
 DAY = (
@@ -175,7 +184,7 @@ class Student(models.Model):
     year = models.CharField(choices=YEAR, max_length=1, blank=True, null=True)
 
     def __str__(self):
-        return self.id_number
+        return self.user.get_full_name()
 
     def get_absolute_url(self):
         return reverse('profile')
@@ -192,6 +201,9 @@ class Singleton(object):
 
 class Director(models.Model, Singleton):
     user = models.OneToOneField(Teacher, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.user.user.get_full_name()
 
 
 PASS = "PASS"

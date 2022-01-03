@@ -269,7 +269,7 @@ class SubjectAddForm(forms.ModelForm):
 class SessionAddForm(forms.ModelForm):
     is_current_session = forms.CharField(
         widget=forms.Select(choices=((True, 'Yes'), (False, 'No')),attrs={'class': 'browser-default custom-select', }),
-        label="is current semester ?",
+        label="Current session?",
     )
     session = forms.CharField(
         max_length=30,
