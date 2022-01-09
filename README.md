@@ -7,42 +7,34 @@ W aplikacji są 4 rodzaje użytowników:
 * admin
   * login: admin 
   * hasło: admin123
-  
+
+UWAGA! Każdy z poniższych użytkowników ma hasło: "designpatterns123"
 * dyrektor (jest również nauczycielem)
   * login: director
-  * hasło: designpatterns123
 * nauczyciele
   * Nauczyciel nr 1 
     * login: teacher1
-    * hasło: designpatterns123
   * Nauczyciel nr 2
     * login: teacher2
-    * hasło: designpatterns123
   * Nauczyciel nr 3
     * login: teacher3
-    * hasło: designpatterns123  
 * uczniowie
-  * Uczeń nr 1
+  * Uczeń nr 1 z klasy 1a
     * login: student1
-    * password: designpatterns123 
-  * Uczeń nr 2
+  * Uczeń nr 2 z klasy 1a
     * login: student2
-    * password: designpatterns123 
-  * Uczeń nr 3
+  * Uczeń nr 3 z klasy 1a
     * login: student3
-    * password: designpatterns123 
-  * Uczeń nr 4
+  * Uczeń nr 4 z klasy 1a
     * login: student4
-    * password: designpatterns123 
-  * Uczeń nr 5
+  * Uczeń nr 5 z klasy 1b
     * login: student5
-    * password: designpatterns123 
-  * Uczeń nr 6
+  * Uczeń nr 6 z klasy 1b
     * login: student6
-    * password: designpatterns123 
-  * Uczeń nr 7
+  * Uczeń nr 7 z klasy 1c
     * login: student7
-    * password: designpatterns123 
+  * Uczeń nr 8 z klasy 1c
+    * login: student8
 
 Design Patterns:
  - MVT
@@ -50,3 +42,5 @@ Design Patterns:
  - Decorator
  - Adapter
  - Observer ???
+
+Po usunięciu nauczyciela znikają powiązane z nim przedmioty

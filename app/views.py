@@ -157,6 +157,19 @@ class TeacherAddView(CreateView):
 @director_required()
 def delete_teacher(request, pk):
     teacher = get_object_or_404(Teacher, pk=pk)
+    subjects = Subject.objects.filter(teacher=teacher)
+    classes = Class.objects.filter(supervising_teacher=teacher)
+    grades = Grade.objects.filter(teacher=teacher)
+
+    for subject in subjects:
+        subject.delete()
+
+    for grade in grades:
+        grade.delete()
+
+    for clas in classes:
+        clas.delete()
+
     teacher.user.delete()
     teacher.delete()
     messages.success(request, "Successfully deleted")
@@ -328,7 +341,7 @@ def students_with_teacher_learns(teacher_tmp):
 @login_required
 @teacher_required()
 def create_grade(request):
-    students = sorted(students_with_teacher_learns(request.user.teacher), key=lambda x: x.user.last_name, reverse=False)
+    students = sorted(students_with_teacher_learns(request.user.teacher), key=lambda x: x.students_class, reverse=False)
     if request.method == "POST":
         # second page
         if "finish" in request.POST:
@@ -395,10 +408,10 @@ def edit_grades(request):
             return redirect("edit_grades")
     else:
 
-        if request.user.is_director or request.user.is_superuser:
+        if request.user.is_superuser:
             grades = Grade.objects.all()
         else:
-            grades = Grade.objects.filter(student__grade__teacher=request.user.teacher)
+            grades = Grade.objects.filter(teacher=request.user.teacher)
         form = EditGrades(queryset=grades)
 
     return render(request, "grades/edit_grades.html", {"formset": form})
