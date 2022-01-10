@@ -114,26 +114,46 @@ def edit_student(request, pk):
     return render(request, 'students/edit_student2.html', {'form': form})
 
 
+class SubjectIterator:
+    def __init__(self, items, teacher=None):
+        self.teacher = teacher
+        self.indx = 0
+        if teacher is not None:
+            self.items = [sub for sub in items if sub.teacher == teacher]
+        else:
+            self.items = items
+
+    def has_next(self):
+        return False if self.indx >= len(self.items) else True
+
+    def next(self):
+        item = self.items[self.indx]
+        self.indx += 1
+        return item
+
+
 def teachers_subject(teacher):
     subjects = Subject.objects.all()
     sub_array = []
-    for y in subjects:
-        if teacher == y.teacher:
-            sub_array.append(y)
+    iterator = SubjectIterator(items=subjects, teacher=teacher)
+    while iterator.has_next():
+        item = iterator.next()
+        sub_array.append(item)
+
     return sub_array
 
 
 @login_required
 def teacher_list(request):
     teachers = Teacher.objects.all()
-    subject_list = []
+    subject_list2 = []
 
     for x in teachers:
-        subject_list.append(teachers_subject(x))
+        subject_list2.append(teachers_subject(x))
 
     context = {
         'teachers': teachers,
-        'subjects': subject_list
+        'subjects': subject_list2
 
     }
     return render(request, 'teachers/teacher_list.html', context)
@@ -157,12 +177,17 @@ class TeacherAddView(CreateView):
 @director_required()
 def delete_teacher(request, pk):
     teacher = get_object_or_404(Teacher, pk=pk)
-    subjects = Subject.objects.filter(teacher=teacher)
+   # subjects = Subject.objects.filter(teacher=teacher)
     classes = Class.objects.filter(supervising_teacher=teacher)
     grades = Grade.objects.filter(teacher=teacher)
 
-    for subject in subjects:
-        subject.delete()
+    iterator = SubjectIterator(items=Subject.objects.all(), teacher=teacher)
+    while iterator.has_next():
+        item = iterator.next()
+        item.delete()
+
+    # for subject in subjects:
+    #     subject.delete()
 
     for grade in grades:
         grade.delete()

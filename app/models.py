@@ -150,7 +150,7 @@ class Teacher(models.Model):
 
     def __str__(self):
         proxy = UserProxy(self.user)
-        return proxy.get_full_name()
+        return self.user.get_full_name()
 
 
 class Class(models.Model):
@@ -235,8 +235,8 @@ class Director(models.Model, Singleton):
     user = models.OneToOneField(Teacher, on_delete=models.CASCADE)
 
     def __str__(self):
-        proxy = UserProxy(self.user.user)
-        return proxy.get_full_name()
+        # proxy = UserProxy(self.user.user)
+        return self.user.user.get_full_name()
 
 
 PASS = "PASS"
