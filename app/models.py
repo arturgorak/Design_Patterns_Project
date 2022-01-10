@@ -1,4 +1,4 @@
-# from abc import abstractmethod
+from abc import abstractmethod
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 from django.urls import reverse
@@ -25,53 +25,83 @@ class User(AbstractUser):
         return self.get_full_name()
 
 
-# class Observer:
-#     def __init__(self, subject):
-#         self._subject = subject
-#         self._observer_state = None
-#
-#     @abstractmethod
-#     def update(self, arg):
-#         pass
-#
-#
-# class ConcreteObserver(Observer):
-#     def __init__(self, subject):
-#         super().__init__(subject)
-#
-#     def update(self, arg):
-#         self._observer_state = arg
-#         if arg and len(Session.objects.filter(is_current_session=True)) > 1:
-#             for unset in Session.objects.filter(is_current_session=True):
-#                 if unset != self._subject:
-#                     unset.is_current_session = False
-#                     unset.save()
+class UserProxy:
+    def __init__(self, user):
+        self.user = user
+
+    def get_full_name(self):
+        return self.user.get_full_name
+
+    def __str__(self):
+        return self.get_full_name()
+
+
+class Observer:
+    def __init__(self, session):
+        self._session = session
+        self._observer_state = None
+
+    @abstractmethod
+    def update(self, arg):
+        pass
+
+    def get_session(self):
+        return self._session
+
+
+class ConcreteObserver(Observer):
+    def __init__(self, subject):
+        super().__init__(subject)
+
+    def update(self, arg):
+        self._observer_state = arg
+        if arg and len(Session.objects.filter(is_current_session=True)) > 1:
+            for unset in Session.objects.filter(is_current_session=True):
+                if unset != self._session:
+                    unset.is_current_session = False
+                    unset.save()
+
+
+class ObserverIterator:
+    def __init__(self, items, session):
+        self.session = session
+        self.indx = 0
+        self.items = [obs for obs in items if obs.get_session() == session]
+
+    def has_next(self):
+        return False if self.indx >= len(self.items) else True
+
+    def next(self):
+        item = self.items[self.indx]
+        self.indx += 1
+        return item
 
 
 class Session(models.Model):  # academic year
     session = models.CharField(max_length=200, unique=True)
     is_current_session = models.BooleanField(default=False, blank=True, null=True)
 
-    # _observers = []
+    _observers = []
 
     def __str__(self):
         return self.session
 
-    # def register(self, observer):
-    #     observer._subject = self
-    #     self._observers.append(observer)
-    #
-    # def deregister(self, observer):
-    #     observer._subject = None
-    #     self._observers.remove(observer)
-    #
-    # def notify(self):
-    #     for observer in self._observers:
-    #         if observer._subject == self:
-    #             observer.update(self.is_current_session)
-    #
-    # def count_observers(self):
-    #     print("Observers: " + str(len(self._observers)))
+    def register(self, observer):
+        observer._subject = self
+        self._observers.append(observer)
+
+    def deregister(self, observer):
+        observer._subject = None
+        self._observers.remove(observer)
+
+    def notify(self):
+        iterator = ObserverIterator(self._observers, self)
+        while iterator.has_next():
+            item = iterator.next()
+            item.update(self.is_current_session)
+
+    def count_observers(self):
+        print("Observers: " + str(len(self._observers)))
 
 
 FIRST = "First"
@@ -119,7 +149,8 @@ class Teacher(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.user.get_full_name()
+        proxy = UserProxy(self.user)
+        return proxy.get_full_name()
 
 
 class Class(models.Model):
@@ -184,7 +215,8 @@ class Student(models.Model):
     year = models.CharField(choices=YEAR, max_length=1, blank=True, null=True)
 
     def __str__(self):
-        return self.user.get_full_name()
+        proxy = UserProxy(self.user)
+        return proxy.get_full_name()
 
     def get_absolute_url(self):
         return reverse('profile')
@@ -203,7 +235,8 @@ class Director(models.Model, Singleton):
     user = models.OneToOneField(Teacher, on_delete=models.CASCADE)
 
     def __str__(self):
-        return self.user.user.get_full_name()
+        proxy = UserProxy(self.user.user)
+        return proxy.get_full_name()
 
 
 PASS = "PASS"

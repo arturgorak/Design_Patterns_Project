@@ -520,19 +520,14 @@ def session_add(request):
     if request.method == 'POST':
         form = SessionAddForm(request.POST)
         if form.is_valid():
-            # if form.cleaned_data.get("is_current_session") and len(
-            #         Session.objects.filter(is_current_session=True)) == 1:
-            #     unset = Session.objects.filter(is_current_session=True).first()
-            #     unset.is_current_session = False
-            #     unset.save()
-
             form.save()
-            # new_session = Session.objects.filter(session=form.cleaned_data.get("session")).first()
-            # obs = ConcreteObserver(new_session)
-            # new_session.register(obs)
-            # new_session.count_observers()
-            # new_session.notify()
-
+            # comment
+            new_session = Session.objects.filter(session=form.cleaned_data.get("session")).first()
+            obs = ConcreteObserver(new_session)
+            new_session.register(obs)
+            new_session.count_observers()
+            new_session.notify()
+            # -----------------------------------------
             messages.success(request, 'Session added successfully ! ')
         return redirect("session_list")
     else:
@@ -554,17 +549,12 @@ def session_edit(request, pk):
     if request.method == 'POST':
         form = SessionAddForm(request.POST, instance=session)
         if form.is_valid():
-            # if form.cleaned_data.get("is_current_session") and len(
-            #         Session.objects.filter(is_current_session=True)) == 1:
-            #     unset = Session.objects.filter(is_current_session=True).first()
-            #     unset.is_current_session = False
-            #     unset.save()
             form.save()
-
-            # edited_session = Session.objects.filter(session=form.cleaned_data.get("session")).first()
-            # edited_session.count_observers()
-            # edited_session.notify()
-
+            # comment -------------------------
+            edited_session = Session.objects.filter(session=form.cleaned_data.get("session")).first()
+            edited_session.count_observers()
+            edited_session.notify()
+            # -------------------------------------
             messages.success(request, 'Session updated successfully ! ')
         return redirect('session_list')
     else:

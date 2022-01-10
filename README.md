@@ -41,6 +41,11 @@ Design Patterns:
  - Singleton
  - Decorator
  - Adapter
- - Observer ???
+ - Observer
+ - Proxy
+ - Iterator
 
-Po usunięciu nauczyciela znikają powiązane z nim przedmioty
+Dopytać:
+ - Command
+ - Template Method
+

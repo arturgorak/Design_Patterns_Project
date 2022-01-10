@@ -21,7 +21,6 @@
                         <tr>
                             <th></th>
                             <th>Subject</th>
-                            <th>Subject's id</th>
                             <th>Grade</th>
                             <th>Weight</th>
                             <th>Teacher</th>
@@ -33,7 +32,6 @@
                             <tr>
                                 <td>{{ forloop.counter }}</td>
                                 <td>{{ subject.subject.subjectName }}</td>
-                                <td>{{ subject.subject.subjectCode }}</td>
                                 <td>{{ subject.grade }}</td>
                                 <td>{{ subject.weight }}</td>
                                 <td>{{ subject.teacher.user.get_full_name }}</td>
