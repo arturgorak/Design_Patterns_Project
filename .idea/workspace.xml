@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="314ac281-c88d-4453-92cc-54113c898e99" name="Changes" comment="Adding proxy, iterator">
+    <list default="true" id="314ac281-c88d-4453-92cc-54113c898e99" name="Changes" comment="Proxy fix, new iterator">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/app/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/profile/profile2.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/profile/profile2.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/subjects/subject_list.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/subjects/subject_list.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -101,7 +102,9 @@
       <workItem from="1641244086701" duration="3659000" />
       <workItem from="1641670434701" duration="106000" />
       <workItem from="1641670559695" duration="12965000" />
-      <workItem from="1641840257988" duration="11837000" />
+      <workItem from="1641840257988" duration="14245000" />
+      <workItem from="1641884440530" duration="1904000" />
+      <workItem from="1641887222375" duration="255000" />
     </task>
     <task id="LOCAL-00001" summary="Grades update">
       <created>1640727878792</created>
@@ -173,7 +176,14 @@
       <option name="project" value="LOCAL" />
       <updated>1641853086017</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Proxy fix, new iterator">
+      <created>1641857396047</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1641857396047</updated>
+    </task>
+    <option name="localTasksCounter" value="12" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -201,6 +211,7 @@
     <MESSAGE value="Grades fix" />
     <MESSAGE value="Forms update" />
     <MESSAGE value="Adding proxy, iterator" />
-    <option name="LAST_COMMIT_MESSAGE" value="Adding proxy, iterator" />
+    <MESSAGE value="Proxy fix, new iterator" />
+    <option name="LAST_COMMIT_MESSAGE" value="Proxy fix, new iterator" />
   </component>
 </project>

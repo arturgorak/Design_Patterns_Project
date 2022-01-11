@@ -36,16 +36,14 @@ UWAGA! Każdy z poniższych użytkowników ma hasło: "designpatterns123"
   * Uczeń nr 8 z klasy 1c
     * login: student8
 
-Design Patterns:
- - MVT
- - Singleton
- - Decorator
- - Adapter
- - Observer
- - Proxy
- - Iterator
-
-Dopytać:
- - Command
- - Template Method
+# Design Patterns:
+ - MVT/MVC 
+ - Singleton - models.py
+ - Decorator - decorators.py
+ - Adapter - views.py
+ - Observer - models.py / wbudowane
+ - Proxy - models.py
+ - Iterator - models.py / views.py
+ - Command - wbudowane / requesty
+ - Template Method - wbudowane / klasy w views.py
 

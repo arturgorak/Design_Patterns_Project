@@ -98,7 +98,6 @@
                         <tr>
                             <th scope="col">Lesson's number</th>
                             <th scope="col">Subject Name</th>
-                            <th scope="col">Subject ID</th>
                             {% if request.user.is_teacher %}
                                 <th scope="col">Class</th>
                             {% elif request.user.is_student %}
@@ -116,7 +115,6 @@
                             <tr>
                                 <td>{{ subject.number }}</td>
                                 <td>{{ subject.subjectName }}</td>
-                                <td>{{ subject.subjectCode }}</td>
                                 {% if request.user.is_teacher %}
                                     <td>{{ subject.year }}{{ subject.branch }}</td>
                                 {% elif request.user.is_student %}
@@ -134,7 +132,6 @@
                             <tr>
                                 <td>{{ subject.number }}</td>
                                 <td>{{ subject.subjectName }}</td>
-                                <td>{{ subject.subjectCode }}</td>
                                 {% if request.user.is_teacher %}
                                     <td>{{ subject.year }}{{ subject.branch }}</td>
                                 {% elif request.user.is_student %}
@@ -152,7 +149,6 @@
                             <tr>
                                 <td>{{ subject.number }}</td>
                                 <td>{{ subject.subjectName }}</td>
-                                <td>{{ subject.subjectCode }}</td>
                                 {% if request.user.is_teacher %}
                                     <td>{{ subject.year }}{{ subject.branch }}</td>
                                 {% elif request.user.is_student %}
@@ -170,7 +166,6 @@
                             <tr>
                                 <td>{{ subject.number }}</td>
                                 <td>{{ subject.subjectName }}</td>
-                                <td>{{ subject.subjectCode }}</td>
                                 {% if request.user.is_teacher %}
                                     <td>{{ subject.year }}{{ subject.branch }}</td>
                                 {% elif request.user.is_student %}
@@ -188,7 +183,6 @@
                             <tr>
                                 <td>{{ subject.number }}</td>
                                 <td>{{ subject.subjectName }}</td>
-                                <td>{{ subject.subjectCode }}</td>
                                 {% if request.user.is_teacher %}
                                     <td>{{ subject.year }}{{ subject.branch }}</td>
                                 {% elif request.user.is_student %}

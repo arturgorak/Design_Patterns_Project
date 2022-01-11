@@ -15,7 +15,6 @@
                         <tr>
                             <th>#</th>
                             <th>Name</th>
-                            <th>Code</th>
                             <th>Teacher</th>
                             <th>Class</th>
                             <th>Day</th>
@@ -29,7 +28,6 @@
                             <tr>
                                 <td>{{ forloop.counter }} </td>
                                 <td>{{ s.subjectName }} </td>
-                                <td>{{ s.subjectCode }} </td>
                                 <td>{{ s.teacher.user.get_full_name }} </td>
                                 <td>{{ s.year }}{{ s.branch }} </td>
                                 <td>{{ s.day }} </td>
