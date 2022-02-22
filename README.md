@@ -2,8 +2,52 @@
 
 Projekt stworzony z myślą o przedmiocie Wzorce Projektowe. Celem projektu było stworzenie aplikacji umożliwiającej zarządzanie szkołą
 
-## Użytkownicy
-W aplikacji są 4 rodzaje użytowników: 
+## Uruchamianie programu
+Aby uruchomić aplikacje należy kolejno wpisać w terminal będąc w lokalizacji projektu następujące komendy: 
+1. python3 manage.py makemigrations
+2. python3 manage.py migrate
+3. python3 manage.py runserver
+
+## Funkcjonalności
+- Każdy użytkownik może:
+  - logować się przy pomocy logina i hasła
+  - zmienić hasło 
+  - zmianić dane konta
+  - zobaczyć swój plan zajęć
+  - zobaczyć listę nauczycieli 
+  - zobaczyć listę przedmiotów ze szczegółowymi danymi
+- Nauczyciel może:
+  - wystawiać oceny uczniom z przedmiotów, ale tylko z przedmiotów, których uczy
+  - edytować wcześniej wystawione przez siebie oceny
+  - usunąć wcześniej wystawione przez siebie oceny
+  - zobaczyć listę wszystkich studentów
+- Uczeń może:
+  - zobaczyć swoje oceny wraz ze szczególowymi danymi
+  - zobaczyć listę uczniów ze swojej klasy
+- Dyrektor może:
+  - to samo co nauczyciel, gdyż dyrektor jest również nauczycielem
+  - dodawać nowych nauczycieli
+  - zmieniać dane nauczycieli
+  - usuwać nauczycieli
+  - dodawać nowych uczniów
+  - zmieniać dane uczniów
+  - usuwać uczniów
+  - widzieć oceny wystawione przez wszystkich nauczycieli, przy czym może tylko usuwać/ edytować własne
+  - dodać rok akademicki
+  - edytować rok akademicki
+  - usuwać rok akademicki
+- Admin może:
+  - dodawać nowych nauczycieli
+  - zmieniać dane nauczycieli
+  - usuwać nauczycieli
+  - dodawać nowych uczniów
+  - zmieniać dane uczniów
+  - usuwać uczniów
+  - dodać rok akademicki
+  - edytować rok akademicki
+  - usuwać rok akademicki
+
+## Dane logowania użytkowników
 * admin
   * login: admin 
   * hasło: admin123
